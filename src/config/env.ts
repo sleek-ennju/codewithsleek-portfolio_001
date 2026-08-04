@@ -2,8 +2,6 @@ import { z } from "zod";
 
 const serverEnvSchema = z.object({
   DATABASE_URL: z.string().url().startsWith("postgresql://"),
-  AUTH_SECRET: z.string().min(32),
-  ADMIN_EMAIL: z.string().email().transform((value) => value.toLowerCase()),
 });
 
 export function getServerEnv() {
