@@ -16,26 +16,30 @@ export const credibilityMetrics = [
 export const processSteps = [
   {
     number: "01",
-    title: "Strategy",
+    title: "Frame the product",
     description:
-      "Clarify the product goal, audience, constraints, and strongest technical path before implementation begins.",
+      "Clarify the goal, audience, constraints, success criteria, and strongest technical path before implementation begins.",
+    output: "Scope · priorities · technical direction",
   },
   {
     number: "02",
-    title: "Design translation",
+    title: "Shape the experience",
     description:
-      "Turn the visual system into responsive, accessible interfaces with precise interaction states.",
+      "Translate the visual system into responsive flows, reusable interface patterns, and precise interaction states.",
+    output: "Flows · components · responsive states",
   },
   {
     number: "03",
-    title: "Engineering",
+    title: "Engineer the system",
     description:
-      "Build a maintainable, server-first product with focused client-side interaction and measurable performance.",
+      "Build maintainable product logic with deliberate server boundaries, focused client interaction, and useful data models.",
+    output: "Application · integrations · content tools",
   },
   {
     number: "04",
-    title: "QA and launch",
+    title: "Verify and release",
     description:
-      "Test the complete experience, harden its edge cases, verify quality gates, and release with confidence.",
+      "Test the complete journey, harden edge cases, check accessibility and performance, then release with confidence.",
+    output: "QA · measured evidence · deployment",
   },
 ] as const;

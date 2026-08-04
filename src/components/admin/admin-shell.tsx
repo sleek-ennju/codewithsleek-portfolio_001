@@ -6,6 +6,7 @@ const adminNavigation = [
   { href: "/admin/dashboard", label: "Overview", short: "OV" },
   { href: "/admin/projects", label: "Projects", short: "PR" },
   { href: "/admin/media", label: "Media", short: "ME" },
+  { href: "/admin/contact", label: "Contact", short: "CO" },
   { href: "/admin/audits", label: "Audits", short: "AU" },
   { href: "/admin/testimonials", label: "Testimonials", short: "TE" },
   { href: "/admin/technologies", label: "Technologies", short: "TC" },

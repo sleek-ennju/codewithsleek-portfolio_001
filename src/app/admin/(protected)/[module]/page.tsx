@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 
 const modules: Record<string, { title: string; description: string }> = {
   media: { title: "Media", description: "Cloudinary upload validation and the reusable media library arrive in Sprint 5." },
-  audits: { title: "Performance audits", description: "Google PageSpeed audit execution and dated history arrive in Sprint 9." },
   testimonials: { title: "Testimonials", description: "Social-proof content management is prepared for the project CMS implementation." },
   technologies: { title: "Technologies", description: "Reusable technology categories will connect to the project editor in Sprint 4." },
   settings: { title: "Site settings", description: "Verified contact details, social profiles, homepage copy, résumé, and SEO defaults will live here." },

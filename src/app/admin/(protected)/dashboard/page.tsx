@@ -13,6 +13,7 @@ export default async function AdminDashboardPage() {
     ["Media", overview.media, "Managed Cloudinary assets"],
     ["Verified audits", overview.audits, "Successful dated results"],
     ["Testimonials", overview.testimonials, "Published social proof"],
+    ["Unread enquiries", overview.unreadContacts, "Waiting in the contact inbox"],
   ] as const;
 
   return (

@@ -1,6 +1,6 @@
 export function SiteFooter() {
   return (
-    <footer className="site-footer" id="contact">
+    <footer className="site-footer">
       <div className="container footer-grid">
         <div>
           <p className="footer-brand">CODEwithSleek</p>
@@ -8,7 +8,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="footer-label">Start a conversation</p>
-          <p className="footer-pending">Verified contact details will publish with the content platform.</p>
+          <p className="footer-pending">Use the project enquiry form above and I’ll reply with a clear next step.</p>
         </div>
         <div>
           <p className="footer-label">Elsewhere</p>
