@@ -1,0 +1,73 @@
+"use client";
+
+import Image from "next/image";
+import { useActionState } from "react";
+
+import type { ProjectFormState } from "@/features/projects/schemas";
+
+type ProjectValues = {
+  title?: string; slug?: string; shortSummary?: string; projectType?: string; industries?: string[] | string; year?: number | string;
+  liveUrl?: string | null; demoUrl?: string | null; repositoryUrl?: string | null; repositoryVisible?: boolean;
+  featured?: boolean; displayOrder?: number | string; overview?: string | null; status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  cardImageId?: string | null; coverImageId?: string | null; socialImageId?: string | null; galleryImageIds?: string[];
+  problem?: string | null; goals?: string | null; role?: string | null; approach?: string | null; challenges?: string | null;
+  solutions?: string | null; outcome?: string | null; lessons?: string | null; seoTitle?: string | null; seoDescription?: string | null;
+  technologies?: string[] | string; metrics?: Array<{ label: string; value: string; unit: string | null }> | string;
+};
+
+type MediaOption = { id: string; fileName: string; secureUrl: string; altText: string | null };
+
+export function ProjectForm({ action, values = {}, media }: { action: (state: ProjectFormState, data: FormData) => Promise<ProjectFormState>; values?: ProjectValues; media: MediaOption[] }) {
+  const [state, formAction, pending] = useActionState(action, {});
+  const error = (name: string) => state.errors?.[name]?.[0];
+  const activeValues = state.values ?? values;
+  const industries = Array.isArray(activeValues.industries) ? activeValues.industries.join(", ") : activeValues.industries;
+  const technologies = Array.isArray(activeValues.technologies) ? activeValues.technologies.join(", ") : activeValues.technologies;
+  const metrics = Array.isArray(activeValues.metrics) ? activeValues.metrics.map((metric) => [metric.label, metric.value, metric.unit].filter(Boolean).join(" | ")).join("\n") : activeValues.metrics;
+
+  return <form action={formAction} className="admin-project-form" key={state.submissionId ?? "initial"}>
+    {state.message && <p className="admin-form-error" aria-live="polite">{state.message}</p>}
+    <div className="admin-form-grid">
+      <label>Title<input name="title" defaultValue={activeValues.title} required />{error("title") && <span>{error("title")}</span>}</label>
+      <label>Slug<input name="slug" defaultValue={activeValues.slug} placeholder="project-name" required />{error("slug") && <span>{error("slug")}</span>}</label>
+      <label className="admin-form-wide">Short summary<textarea name="shortSummary" defaultValue={activeValues.shortSummary} rows={3} required />{error("shortSummary") && <span>{error("shortSummary")}</span>}</label>
+      <label>Project type<input name="projectType" defaultValue={activeValues.projectType} placeholder="Web application" required /></label>
+      <label>Year<input name="year" type="number" min="2000" max="2100" defaultValue={activeValues.year ?? new Date().getFullYear()} required /></label>
+      <label className="admin-form-wide">Industries<input name="industries" defaultValue={industries} placeholder="Fintech, SaaS" /><small>Separate multiple industries with commas.</small></label>
+      <label>Live URL<input name="liveUrl" type="url" defaultValue={activeValues.liveUrl ?? ""} /></label>
+      <label>Demo URL<input name="demoUrl" type="url" defaultValue={activeValues.demoUrl ?? ""} /></label>
+      <label className="admin-form-wide">Repository URL<input name="repositoryUrl" type="url" defaultValue={activeValues.repositoryUrl ?? ""} />{error("repositoryUrl") && <span>{error("repositoryUrl")}</span>}<small>Stored privately unless “Show repository publicly” is enabled.</small></label>
+      <label className="admin-checkbox"><input name="repositoryVisible" type="checkbox" defaultChecked={activeValues.repositoryVisible} />Show repository publicly</label>
+      <label className="admin-checkbox"><input name="featured" type="checkbox" defaultChecked={activeValues.featured} />Featured project</label>
+      <label>Homepage order<input name="displayOrder" type="number" min="0" max="999" defaultValue={activeValues.displayOrder ?? 0} /><small>Lower numbers appear first.</small></label>
+      <label className="admin-form-wide">Overview<textarea name="overview" defaultValue={activeValues.overview ?? ""} rows={8} />{error("overview") && <span>{error("overview")}</span>}</label>
+      <fieldset className="admin-form-wide admin-case-study-fields"><legend>Case study narrative</legend><div className="admin-form-grid">
+        <label className="admin-form-wide">Problem<textarea name="problem" defaultValue={activeValues.problem ?? ""} rows={5} />{error("problem") && <span>{error("problem")}</span>}</label>
+        <label className="admin-form-wide">Goals<textarea name="goals" defaultValue={activeValues.goals ?? ""} rows={4} /></label>
+        <label className="admin-form-wide">Your role<textarea name="role" defaultValue={activeValues.role ?? ""} rows={4} /></label>
+        <label className="admin-form-wide">Approach<textarea name="approach" defaultValue={activeValues.approach ?? ""} rows={5} /></label>
+        <label className="admin-form-wide">Challenges<textarea name="challenges" defaultValue={activeValues.challenges ?? ""} rows={5} /></label>
+        <label className="admin-form-wide">Solutions<textarea name="solutions" defaultValue={activeValues.solutions ?? ""} rows={5} />{error("solutions") && <span>{error("solutions")}</span>}</label>
+        <label className="admin-form-wide">Outcome<textarea name="outcome" defaultValue={activeValues.outcome ?? ""} rows={5} />{error("outcome") && <span>{error("outcome")}</span>}</label>
+        <label className="admin-form-wide">Lessons learned<textarea name="lessons" defaultValue={activeValues.lessons ?? ""} rows={4} /></label>
+      </div></fieldset>
+      <fieldset className="admin-form-wide admin-case-study-fields"><legend>Evidence and discoverability</legend><div className="admin-form-grid">
+        <label className="admin-form-wide">Technologies<input name="technologies" defaultValue={technologies ?? ""} placeholder="Next.js, PostgreSQL, Cloudinary" /><small>Separate technologies with commas.</small></label>
+        <label className="admin-form-wide">Metrics<textarea name="metrics" defaultValue={metrics ?? ""} rows={5} placeholder={"Performance score | 98 | /100\nConversion increase | 24 | %"} />{error("metrics") && <span>{error("metrics")}</span>}<small>One per line: Label | Value | Unit (unit is optional).</small></label>
+        <label>SEO title<input name="seoTitle" defaultValue={activeValues.seoTitle ?? ""} maxLength={70} /></label>
+        <label>SEO description<textarea name="seoDescription" defaultValue={activeValues.seoDescription ?? ""} maxLength={160} rows={3} /></label>
+      </div></fieldset>
+      <fieldset className="admin-form-wide admin-media-roles"><legend>Project imagery</legend>
+        <div className="admin-form-grid">
+          <label>Card image<select name="cardImageId" defaultValue={activeValues.cardImageId ?? ""}><option value="">No card image</option>{media.map((asset) => <option key={asset.id} value={asset.id}>{asset.fileName}</option>)}</select>{error("cardImageId") && <span>{error("cardImageId")}</span>}</label>
+          <label>Cover image<select name="coverImageId" defaultValue={activeValues.coverImageId ?? ""}><option value="">No cover image</option>{media.map((asset) => <option key={asset.id} value={asset.id}>{asset.fileName}</option>)}</select>{error("coverImageId") && <span>{error("coverImageId")}</span>}</label>
+          <label>Social image<select name="socialImageId" defaultValue={activeValues.socialImageId ?? ""}><option value="">No social image</option>{media.map((asset) => <option key={asset.id} value={asset.id}>{asset.fileName}</option>)}</select></label>
+        </div>
+        <p>Select gallery images. Their current visual order follows the media library order.</p>
+        {media.length === 0 ? <small>Upload images in Media before assigning project imagery.</small> : <div className="admin-project-media-grid">{media.map((asset) => <label key={asset.id}><input name="galleryImageIds" type="checkbox" value={asset.id} defaultChecked={activeValues.galleryImageIds?.includes(asset.id)} /><span className="admin-project-media-thumb"><Image src={asset.secureUrl} alt={asset.altText ?? ""} fill sizes="140px" /></span><span>{asset.fileName}</span></label>)}</div>}
+      </fieldset>
+      <label>Status<select name="status" defaultValue={activeValues.status ?? "DRAFT"}><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option><option value="ARCHIVED">Archived / hidden</option></select></label>
+    </div>
+    <div className="admin-form-actions"><button className="admin-primary-button" disabled={pending} type="submit">{pending ? "Saving…" : "Save project"}</button></div>
+  </form>;
+}
