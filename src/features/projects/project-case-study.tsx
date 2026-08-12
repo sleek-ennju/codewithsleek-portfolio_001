@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { ProjectCaseStudyData } from "@/features/projects/queries";
+import { ProjectSectionRenderer } from "@/features/projects/project-section-renderer";
 
 const narrativeFields = [
   ["Problem", "problem"], ["Goals", "goals"], ["My role", "role"], ["Approach", "approach"],
@@ -27,8 +28,10 @@ export function ProjectCaseStudy({ project, preview = false }: { project: Projec
     <section className="case-study-intro container"><p className="section-kicker">Overview</p><p>{project.overview}</p></section>
     {project.metrics.length > 0 && <dl className="case-study-metrics container">{project.metrics.map((metric) => <div key={metric.id}><dt>{metric.value}{metric.unit && <small>{metric.unit}</small>}</dt><dd>{metric.label}</dd></div>)}</dl>}
     <div className="case-study-narrative container">{narrativeFields.map(([label, key]) => project[key] && <section key={key}><p className="section-kicker">{label}</p><p>{project[key]}</p></section>)}</div>
+    <ProjectSectionRenderer sections={project.sections} />
     {project.technologies.length > 0 && <section className="case-study-stack container"><p className="section-kicker">Technology</p><div>{project.technologies.map(({ technology }) => <span key={technology.id}>{technology.name}</span>)}</div></section>}
     {project.images.length > 0 && <section className="case-study-gallery container"><p className="section-kicker">Project gallery</p><div>{project.images.map(({ id, media }) => <figure key={id}><Image src={media.secureUrl} alt={media.altText ?? ""} fill sizes="(max-width: 800px) 100vw, 50vw" /></figure>)}</div></section>}
+    {project.testimonials.length > 0 && <section className="case-study-testimonials container"><p className="section-kicker">Client perspective</p>{project.testimonials.map((testimonial) => <figure key={testimonial.id}><blockquote>“{testimonial.quote}”</blockquote><figcaption><strong>{testimonial.authorName}</strong><span>{testimonial.authorRole}{testimonial.client ? ` · ${testimonial.client.name}` : ""}</span></figcaption></figure>)}</section>}
     <footer className="case-study-footer container"><p>Have a similar challenge?</p><Link className="button button-dark" href="/#contact">Start a conversation</Link></footer>
   </main>;
 }

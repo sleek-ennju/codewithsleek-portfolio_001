@@ -16,13 +16,15 @@ type ProjectValues = {
 };
 
 type MediaOption = { id: string; fileName: string; secureUrl: string; altText: string | null };
+type TechnologyOption = { id: string; name: string; category: string };
 
-export function ProjectForm({ action, values = {}, media }: { action: (state: ProjectFormState, data: FormData) => Promise<ProjectFormState>; values?: ProjectValues; media: MediaOption[] }) {
+export function ProjectForm({ action, values = {}, media, technologyOptions = [] }: { action: (state: ProjectFormState, data: FormData) => Promise<ProjectFormState>; values?: ProjectValues; media: MediaOption[]; technologyOptions?: TechnologyOption[] }) {
   const [state, formAction, pending] = useActionState(action, {});
   const error = (name: string) => state.errors?.[name]?.[0];
   const activeValues = state.values ?? values;
   const industries = Array.isArray(activeValues.industries) ? activeValues.industries.join(", ") : activeValues.industries;
   const technologies = Array.isArray(activeValues.technologies) ? activeValues.technologies.join(", ") : activeValues.technologies;
+  const selectedTechnologies = new Set((technologies ?? "").split(",").map((technology) => technology.trim()).filter(Boolean));
   const metrics = Array.isArray(activeValues.metrics) ? activeValues.metrics.map((metric) => [metric.label, metric.value, metric.unit].filter(Boolean).join(" | ")).join("\n") : activeValues.metrics;
 
   return <form action={formAction} className="admin-project-form" key={state.submissionId ?? "initial"}>
@@ -52,7 +54,7 @@ export function ProjectForm({ action, values = {}, media }: { action: (state: Pr
         <label className="admin-form-wide">Lessons learned<textarea name="lessons" defaultValue={activeValues.lessons ?? ""} rows={4} /></label>
       </div></fieldset>
       <fieldset className="admin-form-wide admin-case-study-fields"><legend>Evidence and discoverability</legend><div className="admin-form-grid">
-        <label className="admin-form-wide">Technologies<input name="technologies" defaultValue={technologies ?? ""} placeholder="Next.js, PostgreSQL, Cloudinary" /><small>Separate technologies with commas.</small></label>
+        <div className="admin-form-wide admin-technology-picker"><strong>Technologies</strong>{technologyOptions.length ? <div>{technologyOptions.map((technology) => <label key={technology.id}><input name="technologies" type="checkbox" value={technology.name} defaultChecked={selectedTechnologies.has(technology.name)} /><span>{technology.name}</span><small>{technology.category}</small></label>)}</div> : <small>Add reusable technologies in the Technologies module first.</small>}</div>
         <label className="admin-form-wide">Metrics<textarea name="metrics" defaultValue={metrics ?? ""} rows={5} placeholder={"Performance score | 98 | /100\nConversion increase | 24 | %"} />{error("metrics") && <span>{error("metrics")}</span>}<small>One per line: Label | Value | Unit (unit is optional).</small></label>
         <label>SEO title<input name="seoTitle" defaultValue={activeValues.seoTitle ?? ""} maxLength={70} /></label>
         <label>SEO description<textarea name="seoDescription" defaultValue={activeValues.seoDescription ?? ""} maxLength={160} rows={3} /></label>

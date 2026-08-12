@@ -3,12 +3,14 @@ import Image from "next/image";
 
 import { credibilityMetrics, processSteps } from "./content";
 import { ContactSection } from "@/features/contact/contact-section";
+import type { SiteSettings } from "@/features/settings/schemas";
 
 type FeaturedProject = { id: string; title: string; slug: string; shortSummary: string; projectType: string; year: number; cardImage: { secureUrl: string; altText: string | null } | null; technologies: Array<{ technology: { id: string; name: string } }> };
 type HomeTechnology = { id: string; name: string; category: string };
 type PerformanceEvidence = { id: string; strategy: string; performanceScore: number | null; accessibilityScore: number | null; bestPracticesScore: number | null; seoScore: number | null; auditedAt: Date | null; source: string; project: { title: string; slug: string } };
+type HomeTestimonial = { id: string; authorName: string; authorRole: string; quote: string; client: { name: string } | null; project: { title: string; slug: string } | null };
 
-export function HomePage({ projects, technologies, performanceAudits }: { projects: FeaturedProject[]; technologies: HomeTechnology[]; performanceAudits: PerformanceEvidence[] }) {
+export function HomePage({ projects, technologies, performanceAudits, testimonials, settings }: { projects: FeaturedProject[]; technologies: HomeTechnology[]; performanceAudits: PerformanceEvidence[]; testimonials: HomeTestimonial[]; settings: SiteSettings }) {
   return (
     <main>
       <section className="hero">
@@ -17,11 +19,8 @@ export function HomePage({ projects, technologies, performanceAudits }: { projec
         <div className="hero-glow hero-glow-right" aria-hidden="true" />
         <div className="container hero-content">
           <p className="eyebrow hero-stack"><span aria-hidden="true">&lt;/&gt;</span> Frontend Engineer · React · Tailwind CSS · TypeScript · MERN Stack · Figma</p>
-          <h1>Crafting logic,<br /><span>the sleek way.</span></h1>
-          <p className="hero-lede">
-            I design and engineer clear, scalable web products for ambitious
-            teams—from the first product decision to the polished release.
-          </p>
+          <h1>{settings.heroTitle}<br /><span>{settings.heroAccent}</span></h1>
+          <p className="hero-lede">{settings.heroDescription}</p>
           <div className="hero-actions">
             <Link className="button button-dark" href="#contact">Start a project <span aria-hidden="true">↗</span></Link>
             <Link className="button button-light" href="#works">Explore my work</Link>
@@ -109,6 +108,8 @@ export function HomePage({ projects, technologies, performanceAudits }: { projec
           </div>
         </div>
       </section> : null}
+
+      {testimonials.length > 0 && <section className="section testimonial-section" aria-labelledby="testimonial-title"><div className="container"><div className="testimonial-heading"><div><p className="section-kicker">Client perspective</p><h2 id="testimonial-title">Trusted to make complex work feel clear.</h2></div><p>Concise feedback from clients and collaborators, connected to the work where appropriate.</p></div><div className="testimonial-grid">{testimonials.map((testimonial) => <figure key={testimonial.id}><blockquote>“{testimonial.quote}”</blockquote><figcaption><strong>{testimonial.authorName}</strong><span>{testimonial.authorRole}{testimonial.client ? ` · ${testimonial.client.name}` : ""}</span>{testimonial.project && <Link href={`/projects/${testimonial.project.slug}`}>View {testimonial.project.title} ↗</Link>}</figcaption></figure>)}</div></div></section>}
 
       <section className="section about-section" id="about">
         <div className="container about-grid">

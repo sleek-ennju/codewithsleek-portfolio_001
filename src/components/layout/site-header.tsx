@@ -1,16 +1,18 @@
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
+import { getSiteSettings } from "@/features/settings/queries";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const settings = await getSiteSettings();
   return (
     <header className="site-header">
       <div className="container nav-shell">
         <Link className="brand" href="/" aria-label="Code with Sleek home">
           <span className="brand-mark" aria-hidden="true">S</span>
           <span className="brand-copy">
-            <strong>CODEwithSleek</strong>
-            <small>Crafting logic the sleek way</small>
+            <strong>{settings.brandName}</strong>
+            <small>{settings.tagline}</small>
           </span>
         </Link>
 
@@ -33,7 +35,7 @@ export function SiteHeader() {
           </nav>
         </details>
 
-        <Link className="button button-dark nav-cta" href="/#contact">
+        <Link className="button button-dark nav-cta" href={settings.bookingUrl || "/#contact"} target={settings.bookingUrl ? "_blank" : undefined}>
           Book a call
         </Link>
       </div>

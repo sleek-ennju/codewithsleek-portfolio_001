@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { projectFormSchema } from "../../src/features/projects/schemas";
+import { projectFormSchema, projectSectionFormSchema } from "../../src/features/projects/schemas";
 
 const validProject = {
   title: "Portfolio platform",
@@ -57,6 +57,23 @@ describe("projectFormSchema", () => {
 
   it("requires structured metric lines", () => {
     const result = projectFormSchema.safeParse({ ...validProject, metrics: "Performance score only" });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("projectSectionFormSchema", () => {
+  it("accepts a rich text content block", () => {
+    const result = projectSectionFormSchema.safeParse({ type: "RICH_TEXT", title: "The approach", primary: "A focused delivery narrative.", secondary: "" });
+    expect(result.success).toBe(true);
+  });
+
+  it("requires content for both columns", () => {
+    const result = projectSectionFormSchema.safeParse({ type: "TWO_COLUMN", title: "Comparison", primary: "Before", secondary: "" });
+    expect(result.success).toBe(false);
+  });
+
+  it("requires structured metric rows", () => {
+    const result = projectSectionFormSchema.safeParse({ type: "METRICS_GRID", title: "Results", primary: "Performance score only", secondary: "" });
     expect(result.success).toBe(false);
   });
 });

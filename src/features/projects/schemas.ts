@@ -63,3 +63,20 @@ export type ProjectFormSnapshot = {
   problem: string; goals: string; role: string; approach: string; challenges: string; solutions: string;
   outcome: string; lessons: string; seoTitle: string; seoDescription: string; technologies: string; metrics: string;
 };
+
+export const projectSectionFormSchema = z.object({
+  type: z.enum(["RICH_TEXT", "QUOTE", "CODE_SAMPLE", "TWO_COLUMN", "METRICS_GRID"]),
+  title: z.string().trim().max(120),
+  primary: z.string().trim().min(1, "Add section content.").max(12000),
+  secondary: z.string().trim().max(12000),
+}).superRefine((section, context) => {
+  if (section.type === "TWO_COLUMN" && !section.secondary) context.addIssue({ code: "custom", path: ["secondary"], message: "Add content for the second column." });
+  if (section.type === "METRICS_GRID") {
+    section.primary.split("\n").map((line) => line.trim()).filter(Boolean).forEach((line, index) => {
+      const [label, value] = line.split("|").map((part) => part.trim());
+      if (!label || !value) context.addIssue({ code: "custom", path: ["primary"], message: `Metric line ${index + 1} must use Label | Value | Unit.` });
+    });
+  }
+});
+
+export type ProjectSectionFormState = { message?: string; errors?: Record<string, string[]>; values?: { type: string; title: string; primary: string; secondary: string }; submissionId?: string };

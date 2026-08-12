@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { projectFormSchema, type ProjectFormSnapshot, type ProjectFormState } from "@/features/projects/schemas";
+import { projectFormSchema, projectSectionFormSchema, type ProjectFormSnapshot, type ProjectFormState, type ProjectSectionFormState } from "@/features/projects/schemas";
 import type { Prisma } from "@/generated/prisma/client";
 import { getDb } from "@/server/db";
 import { requireAdmin } from "@/server/permissions/require-admin";
@@ -24,7 +24,7 @@ function snapshot(formData: FormData): ProjectFormSnapshot {
     problem: String(formData.get("problem") ?? ""), goals: String(formData.get("goals") ?? ""), role: String(formData.get("role") ?? ""),
     approach: String(formData.get("approach") ?? ""), challenges: String(formData.get("challenges") ?? ""), solutions: String(formData.get("solutions") ?? ""),
     outcome: String(formData.get("outcome") ?? ""), lessons: String(formData.get("lessons") ?? ""), seoTitle: String(formData.get("seoTitle") ?? ""),
-    seoDescription: String(formData.get("seoDescription") ?? ""), technologies: String(formData.get("technologies") ?? ""), metrics: String(formData.get("metrics") ?? ""),
+    seoDescription: String(formData.get("seoDescription") ?? ""), technologies: formData.getAll("technologies").map(String).join(", "), metrics: String(formData.get("metrics") ?? ""),
     cardImageId: String(formData.get("cardImageId") ?? ""), coverImageId: String(formData.get("coverImageId") ?? ""),
     socialImageId: String(formData.get("socialImageId") ?? ""), galleryImageIds: formData.getAll("galleryImageIds").map(String),
   };
@@ -121,4 +121,81 @@ export async function updateProject(projectId: string, _state: ProjectFormState,
 
   revalidatePath("/admin"); revalidatePath("/admin/projects"); revalidatePath(`/admin/projects/${projectId}`); revalidatePath("/projects"); revalidatePath("/");
   redirect("/admin/projects");
+}
+
+function sectionSnapshot(formData: FormData) {
+  return { type: String(formData.get("type") ?? "RICH_TEXT"), title: String(formData.get("title") ?? ""), primary: String(formData.get("primary") ?? ""), secondary: String(formData.get("secondary") ?? "") };
+}
+
+function sectionContent(data: ReturnType<typeof projectSectionFormSchema.parse>): Prisma.InputJsonValue {
+  if (data.type === "TWO_COLUMN") return { left: data.primary, right: data.secondary };
+  if (data.type === "QUOTE") return { quote: data.primary, attribution: data.secondary };
+  if (data.type === "CODE_SAMPLE") return { code: data.primary, language: data.secondary || "text" };
+  if (data.type === "METRICS_GRID") return { metrics: data.primary.split("\n").map((line) => { const [label, value, unit = ""] = line.split("|").map((part) => part.trim()); return { label, value, unit }; }) };
+  return { text: data.primary };
+}
+
+function revalidateProjectSectionPaths(projectId: string, slug?: string) {
+  revalidatePath(`/admin/projects/${projectId}`);
+  revalidatePath(`/admin/projects/${projectId}/preview`);
+  if (slug) revalidatePath(`/projects/${slug}`);
+}
+
+export async function createProjectSection(projectId: string, _state: ProjectSectionFormState, formData: FormData): Promise<ProjectSectionFormState> {
+  const session = await requireAdmin();
+  const values = sectionSnapshot(formData);
+  const parsed = projectSectionFormSchema.safeParse(values);
+  if (!parsed.success) return { message: "Review the highlighted section fields.", errors: parsed.error.flatten().fieldErrors, values, submissionId: crypto.randomUUID() };
+  const project = await getDb().project.findUnique({ where: { id: projectId }, select: { slug: true, sections: { select: { position: true }, orderBy: { position: "desc" }, take: 1 } } });
+  if (!project) return { message: "This project no longer exists." };
+  await getDb().$transaction(async (transaction) => {
+    const section = await transaction.projectSection.create({ data: { projectId, type: parsed.data.type, title: parsed.data.title || null, content: sectionContent(parsed.data), position: (project.sections[0]?.position ?? -1) + 1 } });
+    await transaction.auditLog.create({ data: { actorId: session.user.id, action: "PROJECT_SECTION_CREATED", entityType: "ProjectSection", entityId: section.id, metadata: { projectId, type: parsed.data.type } } });
+  });
+  revalidateProjectSectionPaths(projectId, project.slug);
+  return { message: "Section added.", submissionId: crypto.randomUUID() };
+}
+
+export async function updateProjectSection(projectId: string, sectionId: string, _state: ProjectSectionFormState, formData: FormData): Promise<ProjectSectionFormState> {
+  const session = await requireAdmin();
+  const values = sectionSnapshot(formData);
+  const parsed = projectSectionFormSchema.safeParse(values);
+  if (!parsed.success) return { message: "Review the highlighted section fields.", errors: parsed.error.flatten().fieldErrors, values, submissionId: crypto.randomUUID() };
+  const section = await getDb().projectSection.findFirst({ where: { id: sectionId, projectId }, select: { project: { select: { slug: true } } } });
+  if (!section) return { message: "This section no longer exists." };
+  await getDb().$transaction([
+    getDb().projectSection.update({ where: { id: sectionId }, data: { type: parsed.data.type, title: parsed.data.title || null, content: sectionContent(parsed.data) } }),
+    getDb().auditLog.create({ data: { actorId: session.user.id, action: "PROJECT_SECTION_UPDATED", entityType: "ProjectSection", entityId: sectionId, metadata: { projectId, type: parsed.data.type } } }),
+  ]);
+  revalidateProjectSectionPaths(projectId, section.project.slug);
+  return { message: "Section updated.", submissionId: crypto.randomUUID() };
+}
+
+export async function moveProjectSection(projectId: string, sectionId: string, direction: "up" | "down") {
+  await requireAdmin();
+  const sections = await getDb().projectSection.findMany({ where: { projectId }, orderBy: { position: "asc" }, select: { id: true } });
+  const index = sections.findIndex((section) => section.id === sectionId);
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || target < 0 || target >= sections.length) return;
+  const reordered = [...sections];
+  [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+  await getDb().$transaction(async (transaction) => {
+    for (const [position, section] of reordered.entries()) await transaction.projectSection.update({ where: { id: section.id }, data: { position: -(position + 1) } });
+    for (const [position, section] of reordered.entries()) await transaction.projectSection.update({ where: { id: section.id }, data: { position } });
+  });
+  const project = await getDb().project.findUnique({ where: { id: projectId }, select: { slug: true } });
+  revalidateProjectSectionPaths(projectId, project?.slug);
+}
+
+export async function deleteProjectSection(projectId: string, sectionId: string) {
+  const session = await requireAdmin();
+  const section = await getDb().projectSection.findFirst({ where: { id: sectionId, projectId }, select: { project: { select: { slug: true } } } });
+  if (!section) return;
+  await getDb().$transaction([
+    getDb().projectSection.delete({ where: { id: sectionId } }),
+    getDb().auditLog.create({ data: { actorId: session.user.id, action: "PROJECT_SECTION_DELETED", entityType: "ProjectSection", entityId: sectionId, metadata: { projectId } } }),
+  ]);
+  const remaining = await getDb().projectSection.findMany({ where: { projectId }, orderBy: { position: "asc" }, select: { id: true } });
+  await getDb().$transaction(remaining.map((item, position) => getDb().projectSection.update({ where: { id: item.id }, data: { position } })));
+  revalidateProjectSectionPaths(projectId, section.project.slug);
 }

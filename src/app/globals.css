@@ -222,7 +222,7 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-block: 3.5rem;
+  padding-block: clamp(0.5rem, calc((100svh - 48rem) * 0.25), 3.5rem);
   text-align: center;
 }
 
@@ -1154,19 +1154,46 @@ a {
 .case-study-narrative { padding-block: clamp(5rem, 10vw, 9rem); }
 .case-study-narrative section { display: grid; grid-template-columns: 0.4fr 1.6fr; gap: 3rem; padding-block: 3rem; border-top: 1px solid var(--line); }
 .case-study-narrative section > p:last-child { max-width: 48rem; margin: 0; color: #34363a; font-size: 1.08rem; line-height: 1.8; white-space: pre-line; }
+.case-study-sections { display: grid; gap: clamp(2rem, 6vw, 5rem); padding-bottom: clamp(5rem, 10vw, 9rem); }
+.case-study-section { padding-top: clamp(2rem, 5vw, 4rem); border-top: 1px solid var(--line); }
+.case-study-section > .section-kicker { margin: 0 0 1.5rem; }
+.case-study-section > p:not(.section-kicker) { max-width: 50rem; margin: 0; color: #34363a; font-size: clamp(1.08rem, 2vw, 1.35rem); line-height: 1.75; white-space: pre-line; }
+.case-study-two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2rem, 6vw, 6rem); }
+.case-study-two-column p { margin: 0; color: #34363a; font-size: 1.05rem; line-height: 1.75; white-space: pre-line; }
+.case-study-quote { padding: clamp(2rem, 6vw, 5rem); border: 0; border-radius: var(--radius-lg); background: var(--ink); color: white; }
+.case-study-quote blockquote { max-width: 18ch; margin: 0; font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 700; letter-spacing: -0.055em; line-height: 1.05; }
+.case-study-quote figcaption { margin-top: 2rem; color: #b9bdc5; }
+.case-study-code pre { overflow-x: auto; margin: 0; padding: clamp(1.25rem, 4vw, 2.5rem); border-radius: var(--radius-md); background: #111318; color: #eff2f7; font: 0.9rem/1.7 var(--font-mono), monospace; }
+.case-study-section-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 1px; background: var(--line); }
+.case-study-section-metrics div { padding: clamp(1.4rem, 4vw, 2.5rem); background: white; }
+.case-study-section-metrics dt { font-size: clamp(2rem, 5vw, 4rem); font-weight: 750; letter-spacing: -0.06em; }
+.case-study-section-metrics dt small { margin-left: 0.25rem; font-size: 0.35em; }
+.case-study-section-metrics dd { margin: 0.6rem 0 0; color: var(--muted); }
 .case-study-stack { padding-block: 0 clamp(5rem, 10vw, 9rem); }
 .case-study-gallery { padding-bottom: clamp(5rem, 10vw, 9rem); }
 .case-study-gallery > div { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 .case-study-gallery figure { position: relative; overflow: hidden; aspect-ratio: 4 / 3; margin: 0; border-radius: var(--radius-md); background: var(--surface); }
 .case-study-gallery figure img { object-fit: cover; }
+.testimonial-section { background: #f5f6f8; }
+.testimonial-heading { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 3rem; align-items: end; }
+.testimonial-heading h2 { max-width: 14ch; margin: 0; font-size: clamp(2.5rem, 6vw, 5.5rem); letter-spacing: -0.065em; line-height: 0.98; }
+.testimonial-heading > p { margin: 0; color: var(--muted); line-height: 1.65; }
+.testimonial-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; }
+.testimonial-grid figure, .case-study-testimonials figure { margin: 0; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--line); border-radius: var(--radius-md); background: white; }
+.testimonial-grid blockquote, .case-study-testimonials blockquote { margin: 0; font-size: clamp(1.25rem, 2.4vw, 1.8rem); font-weight: 620; letter-spacing: -0.035em; line-height: 1.4; }
+.testimonial-grid figcaption, .case-study-testimonials figcaption { display: grid; gap: 0.3rem; margin-top: 2rem; }
+.testimonial-grid figcaption span, .case-study-testimonials figcaption span { color: var(--muted); font-size: 0.78rem; }
+.testimonial-grid figcaption a { margin-top: 0.5rem; color: var(--blue); font-size: 0.75rem; font-weight: 700; }
+.case-study-testimonials { display: grid; gap: 1rem; padding-bottom: clamp(5rem, 10vw, 9rem); }
+.case-study-testimonials > .section-kicker { margin-bottom: 0.5rem; }
 .case-study-footer { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding-block: 4rem; border-top: 1px solid var(--line); }
 .case-study-footer p { margin: 0; font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 720; letter-spacing: -0.055em; }
 
 @media (max-width: 800px) {
-  .projects-public-grid, .case-study-gallery > div { grid-template-columns: 1fr; }
+  .projects-public-grid, .case-study-gallery > div, .testimonial-grid { grid-template-columns: 1fr; }
   .projects-public-grid article:nth-child(even) { transform: none; }
-  .case-study-intro, .case-study-narrative section { grid-template-columns: 1fr; gap: 1rem; }
-  .case-study-metrics { grid-template-columns: 1fr; }
+  .case-study-intro, .case-study-narrative section, .case-study-two-column, .testimonial-heading { grid-template-columns: 1fr; gap: 1rem; }
+  .case-study-metrics, .case-study-section-metrics { grid-template-columns: 1fr; }
   .case-study-footer { align-items: flex-start; flex-direction: column; }
 }
 
@@ -1677,6 +1704,64 @@ a {
 .admin-media-roles { margin: 0; padding: 1.2rem; border: 1px solid #d9dce2; border-radius: 0.8rem; }
 .admin-case-study-fields { margin: 0; padding: 1.2rem; border: 1px solid #d9dce2; border-radius: 0.8rem; }
 .admin-case-study-fields legend { padding-inline: 0.35rem; color: var(--ink); font-size: 0.85rem; font-weight: 750; }
+.admin-section-builder { display: grid; gap: 1.5rem; }
+.admin-section-builder-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.admin-section-builder-heading h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.055em; }
+.admin-section-builder-heading p:last-child { margin: 0.6rem 0 0; color: #777c87; font-size: 0.8rem; }
+.admin-section-builder-heading > span { padding: 0.45rem 0.7rem; border-radius: 999px; background: #f0f1f3; color: #626772; font-size: 0.7rem; font-weight: 750; white-space: nowrap; }
+.admin-section-list { display: grid; gap: 0.8rem; }
+.admin-section-card { display: grid; gap: 1rem; padding: 1rem; border: 1px solid #e1e3e7; border-radius: 0.85rem; background: #fafafb; }
+.admin-section-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.admin-section-card-heading > div:first-child { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 0.75rem; }
+.admin-section-card-heading > div:first-child > span { grid-row: span 2; color: #9499a3; font: 0.72rem var(--font-mono), monospace; }
+.admin-section-card-heading strong { font-size: 0.9rem; }
+.admin-section-card-heading small { color: #858994; }
+.admin-section-card-heading > div:last-child { display: flex; gap: 0.4rem; }
+.admin-section-card-heading button { min-width: 3.2rem; padding: 0.5rem 0.65rem; border: 1px solid #d9dce2; border-radius: 0.5rem; background: white; color: #555b66; cursor: pointer; font: inherit; font-size: 0.7rem; font-weight: 700; }
+.admin-section-card-heading button:disabled { cursor: not-allowed; opacity: 0.4; }
+.admin-section-card details > summary, .admin-add-section > summary { cursor: pointer; font-size: 0.78rem; font-weight: 750; }
+.admin-section-card details > form, .admin-add-section > form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e3e5e9; }
+.admin-section-delete { color: #8d2424; }
+.admin-section-delete > p { margin: 0.8rem 0; color: #777c87; font-size: 0.75rem; }
+.admin-section-notice { margin: 0; color: #777c87; font-size: 0.75rem; line-height: 1.55; }
+.admin-technology-picker { display: grid; gap: 0.8rem; color: #4c515d; font-size: 0.78rem; }
+.admin-technology-picker > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+.admin-technology-picker label { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.25rem 0.65rem; padding: 0.8rem; border: 1px solid #d9dce2; border-radius: 0.65rem; cursor: pointer; }
+.admin-technology-picker input { grid-row: span 2; width: 1rem; }
+.admin-technology-picker label > span { color: var(--ink); font-size: 0.78rem; font-weight: 720; }
+.admin-technology-manager { display: grid; gap: 1rem; margin-top: 2rem; }
+.admin-technology-manager .admin-panel-heading > span { color: #777c87; font-size: 0.72rem; font-weight: 700; }
+.admin-technology-create { margin-top: 1.5rem; }
+.admin-technology-list { display: grid; gap: 0.8rem; margin-top: 1.5rem; }
+.admin-technology-card { display: grid; gap: 1rem; padding: 1rem; border: 1px solid #e1e3e7; border-radius: 0.8rem; background: #fafafb; }
+.admin-technology-card > header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; }
+.admin-technology-card > header > span { color: #9499a3; font: 0.72rem var(--font-mono), monospace; }
+.admin-technology-card > header > div:nth-child(2) { display: grid; gap: 0.2rem; }
+.admin-technology-card > header small { color: #858994; }
+.admin-order-actions { display: flex; gap: 0.4rem; }
+.admin-order-actions button { min-width: 3.2rem; padding: 0.5rem 0.65rem; border: 1px solid #d9dce2; border-radius: 0.5rem; background: white; cursor: pointer; font: inherit; font-size: 0.7rem; font-weight: 700; }
+.admin-order-actions button:disabled { cursor: not-allowed; opacity: 0.4; }
+.admin-technology-card details > summary { cursor: pointer; font-size: 0.78rem; font-weight: 750; }
+.admin-technology-card details > form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e3e5e9; }
+.admin-testimonial-manager { display: grid; gap: 1rem; margin-top: 2rem; }
+.admin-testimonial-manager .admin-panel-heading > span { color: #777c87; font-size: 0.72rem; font-weight: 700; }
+.admin-testimonial-create { margin-top: 1.5rem; }
+.admin-testimonial-list { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.admin-testimonial-card { display: grid; gap: 1rem; padding: 1.2rem; border: 1px solid #e1e3e7; border-radius: 0.85rem; background: #fafafb; }
+.admin-testimonial-card > header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; }
+.admin-testimonial-card > header > span { color: #9499a3; font: 0.72rem var(--font-mono), monospace; }
+.admin-testimonial-card > header > div:nth-child(2) { display: grid; gap: 0.2rem; }
+.admin-testimonial-card > header small { color: #858994; }
+.admin-testimonial-card > header > div:last-child { display: flex; gap: 0.4rem; }
+.admin-testimonial-card blockquote { margin: 0; color: #454a54; font-size: 1rem; line-height: 1.65; }
+.admin-testimonial-card details > summary { cursor: pointer; font-size: 0.78rem; font-weight: 750; }
+.admin-testimonial-card details > form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e3e5e9; }
+.admin-settings-panel { margin-top: 2rem; }
+.admin-settings-form > fieldset + fieldset { margin-top: 0.8rem; }
+.footer-socials { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.footer-socials a { color: inherit; font-size: 0.82rem; text-decoration: underline; text-underline-offset: 0.25rem; }
+.admin-add-section { padding: 1.2rem; border: 1px dashed #cfd2d8; border-radius: 0.85rem; background: white; }
+.admin-form-success { margin: 0; padding: 0.8rem 1rem; border-radius: 0.65rem; background: #e5f6eb; color: #157f3c; font-size: 0.78rem; }
 .admin-media-roles legend { padding-inline: 0.35rem; color: var(--ink); font-size: 0.85rem; font-weight: 750; }
 .admin-media-roles > p { margin: 1.2rem 0 0.8rem; color: #777c87; font-size: 0.75rem; }
 .admin-project-media-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
@@ -1721,6 +1806,12 @@ a {
   .admin-contact-card header { flex-direction: column; gap: 0.75rem; }
   .admin-audit-list { grid-template-columns: 1fr; }
   .admin-audit-list dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-section-builder-heading, .admin-section-card-heading { align-items: flex-start; flex-direction: column; }
+  .admin-technology-picker > div { grid-template-columns: 1fr; }
+  .admin-technology-card > header { grid-template-columns: auto 1fr; }
+  .admin-testimonial-card > header { grid-template-columns: auto 1fr; }
+  .admin-testimonial-card > header > div:last-child { grid-column: 2; }
+  .admin-order-actions { grid-column: 2; }
 }
 
 @media (max-width: 980px) {
