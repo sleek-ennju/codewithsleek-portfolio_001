@@ -978,6 +978,7 @@ a {
 .process-section {
   position: relative;
   overflow: hidden;
+  padding-bottom: clamp(3rem, 5vw, 4.75rem);
   background: #101010;
   color: white;
 }
@@ -1049,6 +1050,36 @@ a {
   letter-spacing: 0.04em;
 }
 .process-step strong span { color: #8eb4ff; font-size: inherit; }
+
+.technology-section {
+  position: relative;
+  padding-top: clamp(3.5rem, 6vw, 6rem);
+  background: linear-gradient(180deg, #101010 0, #111214 clamp(4rem, 9vw, 8rem));
+}
+
+.technology-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: max(1rem, calc((100vw - 78rem) / 2));
+  left: max(1rem, calc((100vw - 78rem) / 2));
+  height: 1px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.05), rgb(94 146 245 / 0.72) 50%, rgb(255 255 255 / 0.05));
+}
+
+.technology-section::after {
+  content: "";
+  position: absolute;
+  top: -0.23rem;
+  left: 50%;
+  width: 0.48rem;
+  aspect-ratio: 1;
+  border: 2px solid #101010;
+  border-radius: 50%;
+  background: #5e92f5;
+  box-shadow: 0 0 0 1px rgb(94 146 245 / 0.32);
+  transform: translateX(-50%);
+}
 
 .about-section { background: #fff; }
 .about-grid { align-items: stretch; }
