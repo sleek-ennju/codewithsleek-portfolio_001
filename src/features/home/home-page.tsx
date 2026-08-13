@@ -48,7 +48,26 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
           </div>
 
           {projects.length === 0 ? <div className="home-projects-empty"><strong>Selected case studies are being prepared.</strong><p>Published, featured work will appear here.</p></div> : <div className="project-grid">
-            {projects.map((project, index) => <article className="project-card" key={project.id}><Link href={`/projects/${project.slug}`} aria-label={`Read the ${project.title} case study`}><div className={`project-art project-art-${index + 1}`}>{project.cardImage && <Image src={project.cardImage.secureUrl} alt={project.cardImage.altText ?? ""} fill sizes={index > 2 ? "(max-width: 800px) 100vw, 50vw" : "(max-width: 800px) 100vw, 33vw"} priority={index < 2} />}<span>Case study {String(index + 1).padStart(2, "0")}</span><i aria-hidden="true">↗</i></div><p>{project.projectType} · {project.year}</p><h3>{project.title}</h3><p className="project-summary">{project.shortSummary}</p>{project.technologies.length > 0 && <div className="home-project-tech">{project.technologies.map(({ technology }) => <span key={technology.id}>{technology.name}</span>)}</div>}</Link></article>)}
+            {projects.map((project, index) => (
+              <article className="project-card" key={project.id}>
+                <Link href={`/projects/${project.slug}`} aria-label={`Read the ${project.title} case study`}>
+                  <div className={`project-art project-art-${index + 1}`}>
+                    {project.cardImage && <Image src={project.cardImage.secureUrl} alt={project.cardImage.altText ?? ""} fill sizes={index > 2 ? "(max-width: 800px) 100vw, 50vw" : "(max-width: 800px) 100vw, 33vw"} priority={index < 2} />}
+                    <span>Case study {String(index + 1).padStart(2, "0")}</span>
+                    <i aria-hidden="true">↗</i>
+                  </div>
+                  <div className="project-card-body">
+                    <div className="project-card-meta"><span>{project.projectType}</span><time>{project.year}</time></div>
+                    <h3>{project.title}</h3>
+                    <p className="project-summary">{project.shortSummary}</p>
+                    <div className="project-card-footer">
+                      {project.technologies.length > 0 && <ul className="home-project-tech" aria-label={`${project.title} technologies`}>{project.technologies.map(({ technology }) => <li key={technology.id}>{technology.name}</li>)}</ul>}
+                      <span className="project-card-cta">View case study <i aria-hidden="true">↗</i></span>
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            ))}
           </div>}
         </div>
       </section>
