@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -19,7 +20,7 @@ export default async function AdminLoginPage() {
   return (
     <main className="admin-login-page">
       <div className="admin-login-panel">
-        <Link className="admin-login-brand" href="/">CODEwithSleek</Link>
+        <Link className="admin-login-brand" href="/" aria-label="CODEwithSleek home"><Image src="/logos/cws_logo_wordmark.png" alt="CODEwithSleek — Crafting logic the sleek way" width={1300} height={683} priority sizes="180px" /></Link>
         <p className="admin-eyebrow">Private administration</p>
         <h1>Welcome back.</h1>
         <p className="admin-login-copy">Sign in to manage projects, evidence, media, and the public portfolio.</p>

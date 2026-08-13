@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { siteConfig } from "@/config/site";
 import { getSiteSettings } from "@/features/settings/queries";
@@ -10,7 +11,7 @@ export async function SiteHeader() {
     <header className="site-header">
       <div className="container nav-shell">
         <Link className="brand" href="/" aria-label="Code with Sleek home">
-          <span className="brand-mark" aria-hidden="true">S</span>
+          <span className="brand-mark" aria-hidden="true"><Image src="/logos/cws_logo_mark.png" alt="" width={460} height={383} priority sizes="40px" /></span>
           <span className="brand-copy">
             <strong>{settings.brandName}</strong>
             <small>{settings.tagline}</small>

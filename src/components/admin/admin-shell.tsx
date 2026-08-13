@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { endAdminSession } from "@/features/auth/actions";
 
@@ -18,7 +19,7 @@ export function AdminShell({ children, adminName }: { children: React.ReactNode;
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <Link className="admin-brand" href="/admin/dashboard">
-          <span>S</span><strong>CODEwithSleek</strong>
+          <span><Image src="/logos/cws_logo_mark.png" alt="" width={460} height={383} sizes="32px" /></span><strong>CODEwithSleek</strong>
         </Link>
         <nav aria-label="Administration">
           {adminNavigation.map((item) => (
