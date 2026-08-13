@@ -22,8 +22,8 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
           <h1>{settings.heroTitle}<br /><span>{settings.heroAccent}</span></h1>
           <p className="hero-lede">{settings.heroDescription}</p>
           <div className="hero-actions">
-            <Link className="button button-dark" href="#contact">Start a project <span aria-hidden="true">↗</span></Link>
-            <Link className="button button-light" href="#works">Explore my work</Link>
+            <Link className="button button-dark liquid-button" href="#contact"><span>Start a project <i aria-hidden="true">↗</i></span></Link>
+            <Link className="button button-light liquid-button" href="#works"><span>Explore my work</span></Link>
           </div>
 
           <dl className="metrics-grid">
@@ -142,8 +142,8 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
             <p>I’m Emmanuel Ihenacho, the frontend engineer behind Code with Sleek. I turn product ideas and visual systems into responsive web applications that feel clear, deliberate, and ready for real use.</p>
             <p>My work combines React and TypeScript engineering, MERN-stack delivery, and design fluency in Figma—with accessibility, maintainability, and product outcomes treated as part of the same job.</p>
             <div className="about-actions">
-              <Link className="button button-dark" href="#contact">Start a project</Link>
-              <Link className="button button-light" href="/projects">Browse case studies</Link>
+              <Link className="button button-dark liquid-button" href="#contact"><span>Start a project</span></Link>
+              <Link className="button button-light liquid-button" href="/projects"><span>Browse case studies</span></Link>
             </div>
           </div>
         </div>
