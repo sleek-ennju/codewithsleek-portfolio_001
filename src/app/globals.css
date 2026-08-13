@@ -459,29 +459,6 @@ a {
   aspect-ratio: 16 / 9;
 }
 
-.project-art::before {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  width: 125%;
-  aspect-ratio: 1;
-  left: -70%;
-  bottom: -82%;
-  border-radius: 42% 58% 63% 37% / 48% 39% 61% 52%;
-  background: radial-gradient(circle at 45% 42%, rgb(110 160 255 / 0.72), rgb(47 117 238 / 0.28) 42%, transparent 70%);
-  filter: blur(0.3rem);
-  opacity: 0;
-  transform: translate3d(0, 0, 0) rotate(-18deg) scale(0.72);
-  transition: transform 850ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms ease;
-  pointer-events: none;
-}
-
-.project-card a:hover .project-art::before,
-.project-card a:focus-visible .project-art::before {
-  opacity: 0.72;
-  transform: translate3d(58%, -42%, 0) rotate(18deg) scale(1.12);
-}
-
 .project-art span {
   padding: 0.55rem 0.8rem;
   border-radius: 999px;
