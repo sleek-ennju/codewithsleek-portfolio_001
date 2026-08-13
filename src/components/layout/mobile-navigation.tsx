@@ -1,27 +1,41 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type NavigationItem = { label: string; href: string };
 
 export function MobileNavigation({ items, bookingUrl }: { items: readonly NavigationItem[]; bookingUrl: string }) {
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const [phase, setPhase] = useState<"closed" | "opening" | "open" | "closing">("closed");
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const visible = phase !== "closed";
+  const expanded = phase === "opening" || phase === "open";
+
+  const requestClose = useCallback((restoreFocus = false, afterClose?: () => void) => {
+    if (phase === "closing" || phase === "closed") return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPhase("closing");
+    window.setTimeout(() => {
+      setPhase("closed");
+      if (restoreFocus) triggerRef.current?.focus();
+      afterClose?.();
+    }, reducedMotion ? 0 : 760);
+  }, [phase]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!visible) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const focusDelay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1050;
-    const focusTimer = window.setTimeout(() => dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus(), focusDelay);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const focusTimer = phase === "opening" ? window.setTimeout(() => { dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus(); setPhase("open"); }, reducedMotion ? 0 : 1050) : undefined;
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
+        requestClose(true);
         return;
       }
       if (event.key !== "Tab" || !dialogRef.current) return;
@@ -41,32 +55,38 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.clearTimeout(focusTimer);
+      if (focusTimer) window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [phase, requestClose, visible]);
 
-  function close() {
-    setOpen(false);
+  function openMenu() {
+    if (visible) requestClose(true);
+    else setPhase("opening");
+  }
+
+  function followInternalLink(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    event.preventDefault();
+    requestClose(false, () => router.push(href));
   }
 
   return (
-    <div className={`mobile-menu ${open ? "is-open" : ""}`}>
+    <div className={`mobile-menu ${visible ? "is-open" : ""}`}>
       <button
         ref={triggerRef}
         className="mobile-menu-trigger"
         type="button"
-        aria-expanded={open}
+        aria-expanded={expanded}
         aria-controls="mobile-navigation-scene"
-        onClick={() => setOpen((current) => !current)}
+        onClick={openMenu}
       >
-        <span>{open ? "Close" : "Menu"}</span>
+        <span>{visible ? "Close" : "Menu"}</span>
         <i aria-hidden="true"><b /><b /></i>
       </button>
 
-      {open && createPortal(<div
+      {visible && createPortal(<div
         ref={dialogRef}
-        className="mobile-menu-scene is-open"
+        className={`mobile-menu-scene is-open is-${phase}`}
         id="mobile-navigation-scene"
         role="dialog"
         aria-modal="true"
@@ -74,13 +94,13 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
       >
         <div className="mobile-menu-rail" aria-hidden="true"><span>CODE / WITH / SLEEK</span><b>Navigation</b></div>
         <div className="mobile-menu-panel">
-          <button className="mobile-menu-close" type="button" aria-label="Close navigation" onClick={() => { setOpen(false); triggerRef.current?.focus(); }}><span>Close</span><i aria-hidden="true">×</i></button>
+          <button className="mobile-menu-close" type="button" aria-label="Close navigation" onClick={() => requestClose(true)}><span>Close</span><i aria-hidden="true">×</i></button>
           <div className="mobile-menu-intro"><span>Explore</span><small>{String(items.length).padStart(2, "0")} destinations</small></div>
           <nav aria-label="Mobile navigation">
             <ol>
               {items.map((item, index) => (
                 <li key={item.href} style={{ "--menu-index": index } as React.CSSProperties}>
-                  <Link href={item.href} onClick={close} tabIndex={open ? 0 : -1}>
+                  <Link href={item.href} onClick={(event) => followInternalLink(event, item.href)} tabIndex={expanded ? 0 : -1}>
                     <small>{String(index + 1).padStart(2, "0")}</small>
                     <span>{item.label}</span>
                     <i aria-hidden="true">↗</i>
@@ -91,7 +111,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
           </nav>
           <div className="mobile-menu-footer">
             <p>Have a product in mind?</p>
-            <Link href={bookingUrl || "/#contact"} onClick={close} tabIndex={open ? 0 : -1} target={bookingUrl ? "_blank" : undefined}>Start a conversation <span aria-hidden="true">↗</span></Link>
+            <Link href={bookingUrl || "/#contact"} onClick={bookingUrl ? () => requestClose() : (event) => followInternalLink(event, "/#contact")} tabIndex={expanded ? 0 : -1} target={bookingUrl ? "_blank" : undefined}>Start a conversation <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </div>, document.body)}
