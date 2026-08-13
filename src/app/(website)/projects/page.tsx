@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { getDb } from "@/server/db";
 
-export const metadata: Metadata = { title: "Projects", description: "Code with Sleek project case studies and verified engineering outcomes." };
+export const metadata: Metadata = { title: "Projects", description: "Code with Sleek project case studies and verified engineering outcomes.", alternates: { canonical: "/projects" }, openGraph: { title: "Projects", description: "Code with Sleek project case studies and verified engineering outcomes.", url: "/projects" } };
 
 export default async function ProjectsPage() {
   const projects = await getDb().project.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ displayOrder: "asc" }, { publishedAt: "desc" }], include: { cardImage: true, technologies: { orderBy: { position: "asc" }, take: 4, include: { technology: true } } } });

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Résumé" };
+export const metadata: Metadata = { title: "Résumé", alternates: { canonical: "/resume" } };
 
 export default function ResumePage() {
   return (
