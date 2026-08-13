@@ -15,8 +15,8 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const firstLink = dialogRef.current?.querySelector<HTMLAnchorElement>("a");
-    firstLink?.focus();
+    const focusDelay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700;
+    const focusTimer = window.setTimeout(() => dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus(), focusDelay);
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -41,6 +41,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
+      window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
@@ -71,9 +72,9 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
         aria-modal="true"
         aria-label="Site navigation"
       >
-        <button className="mobile-menu-close" type="button" aria-label="Close navigation" onClick={() => { setOpen(false); triggerRef.current?.focus(); }}><span>Close</span><i aria-hidden="true">×</i></button>
         <div className="mobile-menu-rail" aria-hidden="true"><span>CODE / WITH / SLEEK</span><b>Navigation</b></div>
         <div className="mobile-menu-panel">
+          <button className="mobile-menu-close" type="button" aria-label="Close navigation" onClick={() => { setOpen(false); triggerRef.current?.focus(); }}><span>Close</span><i aria-hidden="true">×</i></button>
           <div className="mobile-menu-intro"><span>Explore</span><small>{String(items.length).padStart(2, "0")} destinations</small></div>
           <nav aria-label="Mobile navigation">
             <ol>

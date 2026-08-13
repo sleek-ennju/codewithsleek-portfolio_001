@@ -966,28 +966,34 @@ a {
   .mobile-menu.is-open .mobile-menu-trigger b { top: 0.61rem; background: var(--ink); }
   .mobile-menu.is-open .mobile-menu-trigger b:first-child { transform: rotate(45deg); }
   .mobile-menu.is-open .mobile-menu-trigger b:last-child { transform: rotate(-45deg); }
-  .mobile-menu-scene { position: fixed; z-index: 70; inset: 0; width: 100vw; max-width: 100vw; min-height: 100svh; display: grid; grid-template-columns: clamp(3.25rem, 14vw, 4.5rem) minmax(0, 1fr); visibility: hidden; overflow: hidden; background: var(--ink); color: white; clip-path: circle(0 at calc(100% - 3.7rem) 2.4rem); pointer-events: none; transition: clip-path 720ms cubic-bezier(0.76, 0, 0.24, 1), visibility 0s linear 720ms; }
-  .mobile-menu-scene.is-open { visibility: visible; clip-path: circle(150% at calc(100% - 3.7rem) 2.4rem); pointer-events: auto; transition-delay: 0s; }
-  .mobile-menu-close { position: absolute; z-index: 2; top: 1.25rem; right: clamp(1.25rem, 6vw, 2rem); min-height: 3rem; display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.75rem 0.7rem 1rem; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 999px; background: transparent; color: white; cursor: pointer; font-size: 0.84rem; font-weight: 700; }
+  .mobile-menu-scene { position: fixed; z-index: 70; inset: 0; width: 100vw; max-width: 100vw; min-height: 100svh; display: grid; grid-template-columns: clamp(3.25rem, 14vw, 4.5rem) minmax(0, 1fr); visibility: hidden; overflow: hidden; background: transparent; color: white; pointer-events: none; perspective: 1400px; }
+  .mobile-menu-scene.is-open { visibility: visible; pointer-events: auto; }
+  .mobile-menu-close { position: absolute; z-index: 2; top: 1.25rem; right: clamp(1.25rem, 6vw, 2rem); min-height: 3rem; display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.75rem 0.7rem 1rem; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 999px; background: transparent; color: white; cursor: pointer; font-size: 0.84rem; font-weight: 700; opacity: 0; animation: mobile-menu-detail-in 360ms 690ms ease forwards; }
   .mobile-menu-close i { width: 1.3rem; height: 1.3rem; display: grid; place-items: center; border-radius: 50%; background: white; color: var(--ink); font: 1rem/1 Arial, sans-serif; }
-  .mobile-menu-rail { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 1.35rem 0 1.5rem; border-right: 1px solid rgb(255 255 255 / 0.16); background: #145ddb; }
+  .mobile-menu-rail { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 1.35rem 0 1.5rem; overflow: hidden; border-right: 1px solid rgb(255 255 255 / 0.16); background: #145ddb; transform: scaleX(0); transform-origin: left center; animation: mobile-menu-spine-out 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .mobile-menu-rail::after { content: ""; position: absolute; top: 0; right: 0; width: 0.45rem; height: 100%; background: linear-gradient(90deg, transparent, rgb(5 28 69 / 0.28)); }
   .mobile-menu-rail span { writing-mode: vertical-rl; color: rgb(255 255 255 / 0.76); font: 0.58rem/1 var(--font-mono), monospace; letter-spacing: 0.18em; }
   .mobile-menu-rail b { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-  .mobile-menu-panel { min-width: 0; min-height: 100svh; display: flex; flex-direction: column; padding: 1.3rem clamp(1.25rem, 6vw, 2rem) 1.75rem; }
-  .mobile-menu-intro { min-height: 3.6rem; display: flex; align-items: flex-end; justify-content: space-between; padding-right: 6.5rem; color: #aeb2bb; text-transform: uppercase; font: 0.62rem/1 var(--font-mono), monospace; letter-spacing: 0.13em; }
+  .mobile-menu-panel { position: relative; min-width: 0; min-height: 100svh; display: flex; flex-direction: column; padding: 1.3rem clamp(1.25rem, 6vw, 2rem) 1.75rem; overflow: hidden; background: var(--ink); box-shadow: -1.4rem 0 3.5rem rgb(0 0 0 / 0.38); transform: rotateY(-94deg) scaleX(0.14); transform-origin: left center; backface-visibility: hidden; transform-style: preserve-3d; animation: mobile-menu-page-unfold 760ms 180ms cubic-bezier(0.2, 0.78, 0.2, 1) forwards; }
+  .mobile-menu-panel::before { content: ""; position: absolute; z-index: 0; inset: 0 auto 0 0; width: clamp(2.5rem, 11vw, 5rem); background: linear-gradient(90deg, rgb(0 0 0 / 0.48), transparent); pointer-events: none; }
+  .mobile-menu-panel > * { position: relative; z-index: 1; }
+  .mobile-menu-intro { min-height: 3.6rem; display: flex; align-items: flex-end; justify-content: space-between; padding-right: 6.5rem; color: #aeb2bb; text-transform: uppercase; font: 0.62rem/1 var(--font-mono), monospace; letter-spacing: 0.13em; opacity: 0; animation: mobile-menu-detail-in 360ms 640ms ease forwards; }
   .mobile-menu-intro small { font: inherit; }
   .mobile-menu-panel nav { flex: 1; display: grid; align-content: center; }
   .mobile-menu-panel ol { margin: 0; padding: 1.5rem 0; list-style: none; }
-  .mobile-menu-panel li { opacity: 0; transform: translateY(2.5rem) rotate(2deg); transition: opacity 380ms ease, transform 620ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(180ms + var(--menu-index) * 75ms); }
+  .mobile-menu-panel li { opacity: 0; transform: translateY(2.5rem) rotate(2deg); transition: opacity 380ms ease, transform 620ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(650ms + var(--menu-index) * 75ms); }
   .mobile-menu-scene.is-open .mobile-menu-panel li { opacity: 1; transform: translateY(0) rotate(0); }
   .mobile-menu-panel nav a { display: grid; grid-template-columns: 2rem 1fr auto; align-items: center; gap: 0.65rem; padding: clamp(0.65rem, 2.8vh, 1.1rem) 0; border-bottom: 1px solid rgb(255 255 255 / 0.17); }
   .mobile-menu-panel nav a small { color: #7f838c; font: 0.62rem var(--font-mono), monospace; }
   .mobile-menu-panel nav a span { font-size: clamp(2.2rem, 11vw, 4.1rem); font-weight: 680; letter-spacing: -0.06em; line-height: 0.95; }
   .mobile-menu-panel nav a i { width: 2rem; height: 2rem; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / 0.25); border-radius: 50%; font-style: normal; transition: color 180ms ease, background 180ms ease, transform 180ms ease; }
   .mobile-menu-panel nav a:hover i, .mobile-menu-panel nav a:focus-visible i { background: white; color: var(--ink); transform: rotate(45deg); }
-  .mobile-menu-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / 0.17); }
+  .mobile-menu-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / 0.17); opacity: 0; animation: mobile-menu-detail-in 360ms 820ms ease forwards; }
   .mobile-menu-footer p { margin: 0; color: #92969f; font-size: 0.7rem; }
   .mobile-menu-footer a { font-size: 0.78rem; font-weight: 700; }
+  @keyframes mobile-menu-spine-out { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes mobile-menu-page-unfold { 0% { transform: rotateY(-94deg) scaleX(0.14); filter: brightness(0.45); } 38% { transform: rotateY(-58deg) scaleX(0.62); filter: brightness(0.65); } 72% { transform: rotateY(7deg) scaleX(1.015); filter: brightness(1.04); } 100% { transform: rotateY(0) scaleX(1); filter: brightness(1); } }
+  @keyframes mobile-menu-detail-in { from { opacity: 0; transform: translateY(0.55rem); } to { opacity: 1; transform: translateY(0); } }
 
   .nav-cta {
     display: none;
