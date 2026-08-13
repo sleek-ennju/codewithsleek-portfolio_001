@@ -15,6 +15,7 @@
     "test:watch": "vitest tests/unit --environment jsdom",
     "test:e2e": "playwright test",
     "test:e2e:production": "cross-env E2E_BASE_URL=https://codewithsleek-portfolio.vercel.app playwright test",
+    "test:lighthouse": "lhci autorun --config=lighthouserc.cjs",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.0",
