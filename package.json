@@ -20,6 +20,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:seed:case-studies": "tsx scripts/seed-starter-case-studies.ts",
+    "db:seed:demo-testimonials": "tsx scripts/seed-demo-testimonials.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {

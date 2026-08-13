@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { getSiteSettings } from "@/features/settings/queries";
+import { MobileNavigation } from "@/components/layout/mobile-navigation";
 
 export async function SiteHeader() {
   const settings = await getSiteSettings();
@@ -26,14 +27,7 @@ export async function SiteHeader() {
           </ul>
         </nav>
 
-        <details className="mobile-nav">
-          <summary>Menu</summary>
-          <nav aria-label="Mobile navigation">
-            {siteConfig.navigation.map((item) => (
-              <Link href={item.href} key={item.href}>{item.label}</Link>
-            ))}
-          </nav>
-        </details>
+        <MobileNavigation items={siteConfig.navigation} bookingUrl={settings.bookingUrl} />
 
         <Link className="button button-dark nav-cta" href={settings.bookingUrl || "/#contact"} target={settings.bookingUrl ? "_blank" : undefined}>
           Book a call

@@ -23,7 +23,7 @@ export default async function Page() {
         project: { select: { title: true, slug: true } },
       },
     }),
-    db.testimonial.findMany({ where: { published: true, featured: true }, orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }], take: 3, select: { id: true, authorName: true, authorRole: true, quote: true, client: { select: { name: true } }, project: { select: { title: true, slug: true } } } }),
+    db.testimonial.findMany({ where: { published: true, featured: true }, orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }], take: 3, select: { id: true, authorName: true, authorRole: true, quote: true, client: { select: { name: true } }, photo: { select: { secureUrl: true, altText: true } }, project: { select: { title: true, slug: true } } } }),
     getSiteSettings(),
   ]);
   return <HomePage projects={projects} technologies={technologies} performanceAudits={performanceAudits} testimonials={testimonials} settings={settings} />;
