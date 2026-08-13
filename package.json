@@ -11,8 +11,10 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --environment jsdom",
-    "test:watch": "vitest --environment jsdom",
+    "test": "vitest run tests/unit --environment jsdom",
+    "test:watch": "vitest tests/unit --environment jsdom",
+    "test:e2e": "playwright test",
+    "test:e2e:production": "cross-env E2E_BASE_URL=https://codewithsleek-portfolio.vercel.app playwright test",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
@@ -33,6 +35,8 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "cross-env": "^10.1.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
