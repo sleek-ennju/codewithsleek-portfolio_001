@@ -75,14 +75,14 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
       <section className="section process-section" id="process">
         <div className="container">
           <div className="process-heading">
-            <div><p className="section-kicker">How I work</p><h2>From intent to a dependable release.</h2></div>
+            <div><p className="section-kicker">How I work</p><h2>From intent to a <span>dependable release.</span></h2></div>
             <p>Each stage closes a different kind of risk: the wrong problem, an unclear experience, fragile implementation, or an unverified launch.</p>
           </div>
           <ol className="process-grid">
             {processSteps.map((step) => (
               <li key={step.number}>
-                <div><span>{step.number}</span><small>Stage</small></div>
-                <div><h3>{step.title}</h3><p>{step.description}</p><strong>{step.output}</strong></div>
+                <div className="process-index"><span>{step.number}</span><small>Stage</small><i aria-hidden="true" /></div>
+                <div className="process-step"><h3>{step.title}</h3><div><p>{step.description}</p><strong><span>Output</span>{step.output}</strong></div></div>
               </li>
             ))}
           </ol>
@@ -133,10 +133,10 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
       <section className="section about-section" id="about">
         <div className="container about-grid">
           <div className="portrait-placeholder profile-card" aria-label="Emmanuel Ihenacho profile card">
-            <div className="profile-card-top"><span>EI</span><small>CODEwithSleek / 01</small></div>
-            <div><p>Frontend engineer</p><strong>Emmanuel<br />Ihenacho</strong></div>
+            <div className="profile-card-top"><span><Image src="/logos/cws_logo_mark.png" alt="" width={500} height={500} sizes="112px" /></span><small>CODE / WITH / SLEEK<br />PROFILE 01</small></div>
+            <div className="profile-card-copy"><p>Frontend engineer · Product thinker</p><strong>Emmanuel<br />Ihenacho</strong><small>Design clarity <i /> Engineering rigour</small></div>
           </div>
-          <div>
+          <div className="about-copy">
             <p className="section-kicker">About me</p>
             <h2>Frontend-first. Product-minded. Full-stack when it matters.</h2>
             <p>I’m Emmanuel Ihenacho, the frontend engineer behind Code with Sleek. I turn product ideas and visual systems into responsive web applications that feel clear, deliberate, and ready for real use.</p>

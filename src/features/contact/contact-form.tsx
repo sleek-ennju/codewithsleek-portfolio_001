@@ -14,6 +14,7 @@ export function ContactForm() {
 
   return (
     <form action={action} className="contact-form" key={state.status === "success" ? state.submissionId : "contact-form"} noValidate>
+      <div className="contact-form-heading"><div><span>Project brief</span><strong>A few details to get us aligned.</strong></div><small>01 — 03</small></div>
       <div className="contact-field-row">
         <label htmlFor="contact-name">
           Name
