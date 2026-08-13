@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 
 type NavigationItem = { label: string; href: string };
@@ -62,15 +63,15 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
         <i aria-hidden="true"><b /><b /></i>
       </button>
 
-      <div
+      {open && createPortal(<div
         ref={dialogRef}
-        className="mobile-menu-scene"
+        className="mobile-menu-scene is-open"
         id="mobile-navigation-scene"
         role="dialog"
         aria-modal="true"
         aria-label="Site navigation"
-        aria-hidden={!open}
       >
+        <button className="mobile-menu-close" type="button" aria-label="Close navigation" onClick={() => { setOpen(false); triggerRef.current?.focus(); }}><span>Close</span><i aria-hidden="true">×</i></button>
         <div className="mobile-menu-rail" aria-hidden="true"><span>CODE / WITH / SLEEK</span><b>Navigation</b></div>
         <div className="mobile-menu-panel">
           <div className="mobile-menu-intro"><span>Explore</span><small>{String(items.length).padStart(2, "0")} destinations</small></div>
@@ -92,7 +93,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
             <Link href={bookingUrl || "/#contact"} onClick={close} tabIndex={open ? 0 : -1} target={bookingUrl ? "_blank" : undefined}>Start a conversation <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
-      </div>
+      </div>, document.body)}
     </div>
   );
 }
