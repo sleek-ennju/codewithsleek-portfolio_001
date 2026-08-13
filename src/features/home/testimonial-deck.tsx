@@ -28,8 +28,6 @@ export function TestimonialDeck({ testimonials }: { testimonials: HomeTestimonia
   return (
     <div className="testimonial-deck">
       <div className="testimonial-stage">
-        <div className="testimonial-shadow-card testimonial-shadow-card-back" aria-hidden="true" />
-        <div className="testimonial-shadow-card testimonial-shadow-card-middle" aria-hidden="true" />
         <figure className={`testimonial-card testimonial-card-${direction}`} key={`${active.id}-${direction}`}>
           <div className="testimonial-card-topline"><span>Client note</span><span>{String(activeIndex + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}</span></div>
           <blockquote className={active.quote.length > 260 ? "is-long" : undefined}>“{active.quote}”</blockquote>
