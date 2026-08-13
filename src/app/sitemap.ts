@@ -24,7 +24,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: project.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.8,
-      images: [project.coverImage?.secureUrl, project.cardImage?.secureUrl].filter((url): url is string => Boolean(url)),
+      images: [...new Set(
+        [project.coverImage?.secureUrl, project.cardImage?.secureUrl].filter(
+          (url): url is string => Boolean(url),
+        ),
+      )],
     })),
   ];
 }
