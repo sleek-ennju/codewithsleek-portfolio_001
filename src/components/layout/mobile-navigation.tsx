@@ -23,7 +23,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
       setPhase("closed");
       if (restoreFocus) triggerRef.current?.focus();
       afterClose?.();
-    }, reducedMotion ? 0 : 760);
+    }, reducedMotion ? 0 : 650);
   }, [phase]);
 
   useEffect(() => {
