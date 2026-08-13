@@ -210,6 +210,7 @@ model PerformanceAudit {
   inpMs               Float?
   lighthouseVersion   String?
   source              String        @default("Google PageSpeed Insights")
+  publicVisible       Boolean       @default(false)
   failureMessage      String?
   rawSnapshot         Json?
   auditedAt           DateTime?

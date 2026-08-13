@@ -1680,7 +1680,7 @@ a {
 .admin-audit-list dl div { min-width: 0; padding: 0.85rem 0.65rem; border-radius: 0.65rem; background: #f4f5f7; }
 .admin-audit-list dt { font-size: 1.5rem; font-weight: 750; letter-spacing: -0.05em; }
 .admin-audit-list dd { margin: 0.25rem 0 0; color: #777c87; font-size: 0.58rem; line-height: 1.35; text-transform: uppercase; }
-.admin-audit-list article > footer { margin-top: 1.5rem; padding-top: 0.9rem; border-top: 1px solid #eceef1; color: #858994; font-size: 0.66rem; }
+.admin-audit-list article > footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 0.9rem; border-top: 1px solid #eceef1; color: #858994; font-size: 0.66rem; }
 .admin-audit-failure, .admin-audit-pending { margin: 1.5rem 0 0; padding: 0.85rem 1rem; border-radius: 0.65rem; font-size: 0.76rem; line-height: 1.5; }
 .admin-audit-failure { background: #feecec; color: #9b1c1c; }
 .admin-audit-pending { background: #eef3ff; color: #315ba9; }

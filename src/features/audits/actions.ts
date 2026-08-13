@@ -55,5 +55,24 @@ export async function createPerformanceAudit(_state: AuditFormState, formData: F
   }
 
   revalidatePath("/admin/audits"); revalidatePath("/admin/dashboard"); revalidatePath("/");
-  return { status: "success", message: `${project.title} was audited successfully.`, values: parsed.data, submissionId: crypto.randomUUID() };
+  return { status: "success", message: `${project.title} was audited successfully and saved privately.`, values: parsed.data, submissionId: crypto.randomUUID() };
+}
+
+export async function setPerformanceAuditVisibility(id: string, publicVisible: boolean) {
+  const session = await requireAdmin();
+  const audit = await getDb().performanceAudit.findUnique({ where: { id }, select: { status: true } });
+  if (!audit) return;
+  if (publicVisible && audit.status !== "SUCCEEDED") throw new Error("Only successful audits can be shown publicly.");
+
+  await getDb().$transaction([
+    getDb().performanceAudit.update({ where: { id }, data: { publicVisible } }),
+    getDb().auditLog.create({ data: {
+      actorId: session.user.id,
+      action: publicVisible ? "PERFORMANCE_AUDIT_PUBLISHED" : "PERFORMANCE_AUDIT_HIDDEN",
+      entityType: "PerformanceAudit",
+      entityId: id,
+    } }),
+  ]);
+  revalidatePath("/admin/audits");
+  revalidatePath("/");
 }
