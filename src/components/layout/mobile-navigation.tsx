@@ -15,7 +15,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const focusDelay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700;
+    const focusDelay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1050;
     const focusTimer = window.setTimeout(() => dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus(), focusDelay);
 
     function handleKeyDown(event: KeyboardEvent) {
