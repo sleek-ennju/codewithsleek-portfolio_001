@@ -1,5 +1,23 @@
 import { expect, test } from "@playwright/test";
 
+test("production safeguards are exposed", async ({ request }) => {
+  const pageResponse = await request.get("/");
+  expect(pageResponse.ok()).toBeTruthy();
+  expect(pageResponse.headers()["x-content-type-options"]).toBe("nosniff");
+  expect(pageResponse.headers()["x-frame-options"]).toBe("DENY");
+  expect(pageResponse.headers()["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+
+  const healthResponse = await request.get("/api/health");
+  expect([200, 503]).toContain(healthResponse.status());
+  expect(healthResponse.headers()["cache-control"]).toContain("no-store");
+  const healthBody = await healthResponse.json();
+  expect(healthBody).toEqual(
+    healthResponse.status() === 200
+      ? { status: "ok", checks: { database: "ok" } }
+      : { status: "unavailable", checks: { database: "unavailable" } },
+  );
+});
+
 test("landing page exposes its primary conversion journey", async ({ page }) => {
   await page.goto("/");
 
