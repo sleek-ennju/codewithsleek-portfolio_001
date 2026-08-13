@@ -499,7 +499,7 @@ a {
 }
 
 .process-grid small {
-  color: #969ba5;
+  color: #666d78;
   font-family: var(--font-mono), monospace;
   font-size: 0.65rem;
   letter-spacing: 0.08em;
@@ -580,7 +580,7 @@ a {
 }
 
 .technology-grid li > span {
-  color: #737983;
+  color: #aeb2ba;
   font-family: var(--font-mono), monospace;
   font-size: 0.68rem;
 }
@@ -1310,7 +1310,7 @@ a {
 }
 
 .admin-login-note {
-  color: #858994;
+  color: #616874;
   font-size: 0.78rem;
   text-align: center;
 }

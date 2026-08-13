@@ -10,5 +10,5 @@ export async function generateMetadata(): Promise<Metadata> { const settings = a
 export default async function WebsiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
   const sameAs = [settings.githubUrl, settings.linkedinUrl, settings.xUrl].filter(Boolean);
-  return <><JsonLd data={{ "@context": "https://schema.org", "@type": "Person", name: "Emmanuel Ihenacho", alternateName: settings.brandName, url: absoluteUrl("/"), email: `mailto:${settings.contactEmail}`, jobTitle: "Frontend Engineer", sameAs }} /><a className="skip-link" href="#main-content">Skip to content</a><SiteHeader /><div id="main-content">{children}</div><SiteFooter /></>;
+  return <><JsonLd data={{ "@context": "https://schema.org", "@type": "Person", name: "Emmanuel Ihenacho", alternateName: settings.brandName, url: absoluteUrl("/"), email: `mailto:${settings.contactEmail}`, jobTitle: "Frontend Engineer", sameAs }} /><a className="skip-link" href="#main-content">Skip to content</a><SiteHeader /><div id="main-content" tabIndex={-1}>{children}</div><SiteFooter /></>;
 }
