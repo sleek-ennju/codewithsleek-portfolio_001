@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 
 import { submitContactForm } from "./actions";
 import { ContactNotification } from "./contact-notification";
@@ -43,7 +44,7 @@ export function ContactForm() {
       {state.status === "success" && state.message ? <ContactNotification key={state.submissionId} message={state.message} /> : null}
 
       <button className="button button-dark" disabled={pending} type="submit">
-        {pending ? "Sending…" : "Send project enquiry"}<span aria-hidden="true">↗</span>
+        {pending ? "Sending…" : "Send project enquiry"}<DiagonalArrow />
       </button>
     </form>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -38,7 +39,7 @@ export function TestimonialDeck({ testimonials }: { testimonials: HomeTestimonia
               {active.photo ? <Image src={active.photo.secureUrl} alt={active.photo.altText || `${active.authorName} portrait`} fill sizes="64px" /> : <span>{initials}</span>}
             </div>
             <div><strong>{active.authorName}</strong><span>{active.authorRole}{active.client ? ` · ${active.client.name}` : ""}</span></div>
-            {active.project && <Link href={`/projects/${active.project.slug}`}>View project <span aria-hidden="true">↗</span></Link>}
+            {active.project && <Link href={`/projects/${active.project.slug}`}>View project <DiagonalArrow /></Link>}
           </figcaption>
         </figure>
       </div>

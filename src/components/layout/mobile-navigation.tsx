@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 
 type NavigationItem = { label: string; href: string };
 
@@ -103,7 +104,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
                   <Link href={item.href} onClick={(event) => followInternalLink(event, item.href)} tabIndex={expanded ? 0 : -1}>
                     <small>{String(index + 1).padStart(2, "0")}</small>
                     <span>{item.label}</span>
-                    <i aria-hidden="true">↗</i>
+                    <i><DiagonalArrow /></i>
                   </Link>
                 </li>
               ))}
@@ -111,7 +112,7 @@ export function MobileNavigation({ items, bookingUrl }: { items: readonly Naviga
           </nav>
           <div className="mobile-menu-footer">
             <p>Have a product in mind?</p>
-            <Link href={bookingUrl || "/#contact"} onClick={bookingUrl ? () => requestClose() : (event) => followInternalLink(event, "/#contact")} tabIndex={expanded ? 0 : -1} target={bookingUrl ? "_blank" : undefined}>Start a conversation <span aria-hidden="true">↗</span></Link>
+            <Link href={bookingUrl || "/#contact"} onClick={bookingUrl ? () => requestClose() : (event) => followInternalLink(event, "/#contact")} tabIndex={expanded ? 0 : -1} target={bookingUrl ? "_blank" : undefined}>Start a conversation <DiagonalArrow /></Link>
           </div>
         </div>
       </div>, document.body)}

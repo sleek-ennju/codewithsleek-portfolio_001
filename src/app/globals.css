@@ -175,6 +175,15 @@ a {
   color: var(--ink);
 }
 
+.diagonal-arrow {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  overflow: visible;
+  vertical-align: -0.12em;
+}
+
 .liquid-button {
   position: relative;
   isolation: isolate;
@@ -1158,7 +1167,7 @@ a {
 .footer-invitation > a { position: relative; display: block; max-width: 16ch; color: white; font-size: clamp(2.8rem, 7vw, 7rem); font-weight: 720; letter-spacing: -0.07em; line-height: 0.95; text-decoration: none; }
 .footer-invitation > a span { color: #5e92f5; }
 .footer-invitation > a i { display: inline-grid; width: 0.72em; height: 0.72em; margin-left: 0.2em; place-items: center; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 50%; font-size: 0.36em; font-style: normal; vertical-align: middle; transition: transform 240ms ease, background-color 240ms ease; }
-.footer-invitation > a:hover i { transform: rotate(45deg); background: #2462d8; }
+  .footer-invitation > a:hover i { transform: scale(1.05); background: #2462d8; }
 .footer-grid { padding-block: 3rem; grid-template-columns: 1.25fr 1fr 0.8fr auto; align-items: end; }
 .footer-socials a { display: inline-flex; gap: 0.25rem; align-items: center; text-decoration: none; }
 .footer-socials a:hover { color: white; }
@@ -1256,7 +1265,7 @@ a {
   .mobile-menu-panel nav a small { color: #7f838c; font: 0.62rem var(--font-mono), monospace; }
   .mobile-menu-panel nav a span { font-size: clamp(2.2rem, 11vw, 4.1rem); font-weight: 680; letter-spacing: -0.06em; line-height: 0.95; }
   .mobile-menu-panel nav a i { width: 2rem; height: 2rem; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / 0.25); border-radius: 50%; font-style: normal; transition: color 180ms ease, background 180ms ease, transform 180ms ease; }
-  .mobile-menu-panel nav a:hover i, .mobile-menu-panel nav a:focus-visible i { background: white; color: var(--ink); transform: rotate(45deg); }
+  .mobile-menu-panel nav a:hover i, .mobile-menu-panel nav a:focus-visible i { background: white; color: var(--ink); transform: scale(1.06); }
   .mobile-menu-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / 0.17); opacity: 0; animation: mobile-menu-detail-in 360ms 980ms ease forwards; }
   .mobile-menu-footer p { margin: 0; color: #92969f; font-size: 0.7rem; }
   .mobile-menu-footer a { font-size: 0.78rem; font-weight: 700; }
