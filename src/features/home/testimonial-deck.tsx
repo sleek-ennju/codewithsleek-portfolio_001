@@ -5,6 +5,10 @@ import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 import Link from "next/link";
 import { useState } from "react";
 
+function DeckArrow({ direction }: { direction: "previous" | "next" }) {
+  return <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d={direction === "previous" ? "M19 12H5m6-6-6 6 6 6" : "M5 12h14m-6-6 6 6-6 6"} /></svg>;
+}
+
 export type HomeTestimonial = {
   id: string;
   authorName: string;
@@ -49,8 +53,8 @@ export function TestimonialDeck({ testimonials }: { testimonials: HomeTestimonia
           {testimonials.map((testimonial, index) => <button key={testimonial.id} type="button" className={index === activeIndex ? "is-active" : ""} aria-label={`Show testimonial ${index + 1} from ${testimonial.authorName}`} aria-current={index === activeIndex ? "true" : undefined} onClick={() => show(index, index > activeIndex ? "next" : "previous")}><span /></button>)}
         </div>
         {testimonials.length > 1 && <div className="testimonial-arrows">
-          <button type="button" aria-label="Previous testimonial" onClick={() => show(activeIndex - 1, "previous")}><span aria-hidden="true">←</span></button>
-          <button type="button" aria-label="Next testimonial" onClick={() => show(activeIndex + 1, "next")}><span aria-hidden="true">→</span></button>
+          <button type="button" aria-label="Previous testimonial" onClick={() => show(activeIndex - 1, "previous")}><DeckArrow direction="previous" /><span>Previous</span></button>
+          <button type="button" aria-label="Next testimonial" onClick={() => show(activeIndex + 1, "next")}><span>Next</span><DeckArrow direction="next" /></button>
         </div>}
       </div>
     </div>

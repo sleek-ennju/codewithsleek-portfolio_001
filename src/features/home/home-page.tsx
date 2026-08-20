@@ -6,16 +6,20 @@ import { credibilityMetrics, processSteps } from "./content";
 import { ContactSection } from "@/features/contact/contact-section";
 import type { SiteSettings } from "@/features/settings/schemas";
 import { TestimonialDeck, type HomeTestimonial } from "./testimonial-deck";
+import { MotionStory } from "./motion-story";
 
-type FeaturedProject = { id: string; title: string; slug: string; shortSummary: string; projectType: string; year: number; cardImage: { secureUrl: string; altText: string | null } | null; technologies: Array<{ technology: { id: string; name: string } }> };
+type ProjectVisual = { secureUrl: string; altText: string | null };
+type FeaturedProject = { id: string; title: string; slug: string; shortSummary: string; projectType: string; year: number; cardImage: ProjectVisual | null; coverImage: ProjectVisual | null; socialImage: ProjectVisual | null; images: Array<{ media: ProjectVisual }>; technologies: Array<{ technology: { id: string; name: string } }> };
 type HomeTechnology = { id: string; name: string; category: string };
 type PerformanceEvidence = { id: string; strategy: string; performanceScore: number | null; accessibilityScore: number | null; bestPracticesScore: number | null; seoScore: number | null; auditedAt: Date | null; source: string; project: { title: string; slug: string } };
 
 export function HomePage({ projects, technologies, performanceAudits, testimonials, settings }: { projects: FeaturedProject[]; technologies: HomeTechnology[]; performanceAudits: PerformanceEvidence[]; testimonials: HomeTestimonial[]; settings: SiteSettings }) {
   return (
     <main>
+      <MotionStory />
       <section className="hero">
         <div className="hero-grid" aria-hidden="true" />
+        <div className="hero-work-frame" aria-hidden="true"><span>INTERFACE / 01</span></div>
         <div className="hero-glow hero-glow-left" aria-hidden="true" />
         <div className="hero-glow hero-glow-right" aria-hidden="true" />
         <div className="container hero-content">
@@ -39,7 +43,7 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
       </section>
 
       <section className="section works-section" id="works">
-        <div className="container">
+        <div className="container works-story-stage">
           <div className="section-heading-row">
             <div>
               <p className="section-kicker">Selected work</p>
@@ -48,13 +52,21 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
             <Link className="text-link" href="/projects">View all case studies <DiagonalArrow /></Link>
           </div>
 
-          {projects.length === 0 ? <div className="home-projects-empty"><strong>Selected case studies are being prepared.</strong><p>Published, featured work will appear here.</p></div> : <div className="project-grid">
-            {projects.map((project, index) => (
-              <article className="project-card" key={project.id}>
+          {projects.length === 0 ? <div className="home-projects-empty"><strong>Selected case studies are being prepared.</strong><p>Published, featured work will appear here.</p></div> : <><div className="work-story-progress" aria-hidden="true"><span /></div><div className="project-grid">
+            {projects.slice(0, 3).map((project, index) => {
+              const projectVisuals = [project.cardImage, project.coverImage, project.socialImage, ...project.images.map(({ media }) => media)]
+                .filter((visual): visual is ProjectVisual => Boolean(visual))
+                .filter((visual, visualIndex, visuals) => visuals.findIndex(({ secureUrl }) => secureUrl === visual.secureUrl) === visualIndex)
+                .slice(0, 3);
+              const trailerVisuals = projectVisuals.length === 1
+                ? ["overview", "feature", "detail"].map((frame) => ({ ...projectVisuals[0], frame }))
+                : projectVisuals.map((visual, visualIndex) => ({ ...visual, frame: visualIndex === 0 ? "overview" : visualIndex === 1 ? "feature" : "detail" }));
+              return <article className="project-card" key={project.id}>
                 <Link href={`/projects/${project.slug}`} aria-label={`Read the ${project.title} case study`}>
                   <div className={`project-art project-art-${index + 1}`}>
-                    {project.cardImage && <Image src={project.cardImage.secureUrl} alt={project.cardImage.altText ?? ""} fill sizes={index > 2 ? "(max-width: 800px) 100vw, 50vw" : "(max-width: 800px) 100vw, 33vw"} priority={index < 2} />}
+                    {trailerVisuals.map((visual, visualIndex) => <Image className="project-visual-slide" data-visual-frame={visual.frame} data-visual-index={visualIndex} key={`${visual.secureUrl}-${visualIndex}`} src={visual.secureUrl} alt={visualIndex === 0 ? visual.altText ?? `${project.title} product overview` : ""} fill sizes="(max-width: 800px) 100vw, 58vw" loading={index === 0 ? "eager" : "lazy"} />)}
                     <span>Case study {String(index + 1).padStart(2, "0")}</span>
+                    {trailerVisuals.length > 1 && <small className="project-visual-status" aria-hidden="true"><b data-current={`${"\u200B"}01`} /> / {String(trailerVisuals.length).padStart(2, "0")}</small>}
                     <i><DiagonalArrow /></i>
                   </div>
                   <div className="project-card-body">
@@ -67,26 +79,37 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
                     </div>
                   </div>
                 </Link>
-              </article>
-            ))}
-          </div>}
+              </article>;
+            })}
+          </div></>}
         </div>
       </section>
 
       <section className="section process-section" id="process">
-        <div className="container">
+        <div className="process-transition" aria-hidden="true"><span /><i /></div>
+        <div className="container process-story-stage">
           <div className="process-heading">
             <div><p className="section-kicker">How I work</p><h2>From intent to a <span>dependable release.</span></h2></div>
             <p>Each stage closes a different kind of risk: the wrong problem, an unclear experience, fragile implementation, or an unverified launch.</p>
           </div>
+          <div className="process-story-layout">
+          <div className="process-blueprint" aria-hidden="true">
+            <div className="process-blueprint-chrome"><span>CODE WITH SLEEK / DELIVERY SYSTEM</span><i>LIVE</i></div>
+            <div className="process-progress"><span /></div>
+            <div className="blueprint-layer blueprint-layer-1"><span>01 / PRODUCT FRAME</span><i /><i /><i /><i /></div>
+            <div className="blueprint-layer blueprint-layer-2"><span>02 / EXPERIENCE MAP</span><i /><i /><i /><i /></div>
+            <div className="blueprint-layer blueprint-layer-3"><span>03 / ENGINEERED SYSTEM</span><i /><i /><i /><i /></div>
+            <div className="blueprint-layer blueprint-layer-4"><span>04 / RELEASE READY</span><strong>VERIFIED</strong><i /><i /><i /></div>
+          </div>
           <ol className="process-grid">
             {processSteps.map((step) => (
               <li key={step.number}>
-                <div className="process-index"><span>{step.number}</span><small>Stage</small><i aria-hidden="true" /></div>
+                <div className="process-index"><span>{step.number}</span><small>Stage</small></div>
                 <div className="process-step"><h3>{step.title}</h3><div><p>{step.description}</p><strong><span>Output</span>{step.output}</strong></div></div>
               </li>
             ))}
           </ol>
+          </div>
         </div>
       </section>
 
@@ -96,6 +119,7 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
             <div><p className="section-kicker">Capabilities</p><h2>A focused stack for complete product delivery.</h2></div>
             <p>Tools are selected for the product—not for the trend cycle. This stack supports responsive interfaces, dependable application logic, useful data, and considered design.</p>
           </div>
+          <div className="capability-rail" aria-hidden="true"><span>DESIGN</span><i /><span>FRONTEND</span><i /><span>DATA</span><i /><span>INTEGRATIONS</span></div>
           {technologies.length ? (
             <ul className="technology-grid">
               {technologies.map((technology, index) => (
