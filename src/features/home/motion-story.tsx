@@ -199,6 +199,8 @@ export function MotionStory() {
 
     let anchorFrame = 0;
     let anchorTimer = 0;
+    let refreshFrame = 0;
+    let disposed = false;
     const scrollToHashTarget = () => {
       const target = document.querySelector<HTMLElement>(window.location.hash);
       if (!target) return;
@@ -216,15 +218,40 @@ export function MotionStory() {
         anchorTimer = window.setTimeout(() => { ScrollTrigger.refresh(); scrollToHashTarget(); }, 350);
       });
     };
-    const refresh = () => { ScrollTrigger.refresh(); alignHashTarget(); };
-    window.addEventListener("load", refresh, { once: true });
+    const refresh = () => {
+      if (disposed) return;
+      ScrollTrigger.refresh();
+      alignHashTarget();
+    };
+    const scheduleRefresh = () => {
+      if (refreshFrame) window.cancelAnimationFrame(refreshFrame);
+      refreshFrame = window.requestAnimationFrame(() => {
+        refreshFrame = window.requestAnimationFrame(refresh);
+      });
+    };
+    const refreshAfterAssets = async () => {
+      await document.fonts?.ready;
+      const projectImages = Array.from(document.querySelectorAll<HTMLImageElement>(".works-section img"));
+      await Promise.allSettled(projectImages.map((image) => image.complete ? image.decode() : new Promise<void>((resolve) => {
+        image.addEventListener("load", () => resolve(), { once: true });
+        image.addEventListener("error", () => resolve(), { once: true });
+      })));
+      scheduleRefresh();
+    };
+    if (document.readyState === "complete") scheduleRefresh();
+    else window.addEventListener("load", scheduleRefresh, { once: true });
+    void refreshAfterAssets();
+    window.addEventListener("pageshow", scheduleRefresh);
     window.addEventListener("hashchange", alignHashTarget);
     alignHashTarget();
     return () => {
-      window.removeEventListener("load", refresh);
+      disposed = true;
+      window.removeEventListener("load", scheduleRefresh);
+      window.removeEventListener("pageshow", scheduleRefresh);
       window.removeEventListener("hashchange", alignHashTarget);
       if (anchorFrame) window.cancelAnimationFrame(anchorFrame);
       if (anchorTimer) window.clearTimeout(anchorTimer);
+      if (refreshFrame) window.cancelAnimationFrame(refreshFrame);
       contexts.forEach((context) => context.revert());
       media.revert();
       root.classList.remove("story-motion-ready");
