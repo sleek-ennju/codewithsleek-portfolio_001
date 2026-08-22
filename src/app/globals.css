@@ -1916,7 +1916,7 @@ a {
 .capability-rail span { flex: 0 0 auto; white-space: nowrap; }
 .capability-rail i { flex: 1 1 4rem; min-width: 2rem; height: 1px; background: rgb(142 180 255 / 0.42); transform-origin: left; }
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  .story-motion-ready .works-section,
+  .story-motion-ready .works-section { overflow: clip; border-radius: 0; }
   .story-motion-ready .process-section { overflow: visible; border-radius: 0; }
   .works-section { padding-block: 0; }
   .works-story-stage { width: 100%; max-width: none; height: calc(100svh - 5.5rem); display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding: clamp(1rem, 2.5vh, 1.75rem) clamp(1.25rem, 5.5vw, 6.5rem); }
