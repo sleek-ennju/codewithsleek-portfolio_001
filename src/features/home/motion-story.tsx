@@ -93,9 +93,9 @@ export function MotionStory() {
       const steps = gsap.utils.toArray<HTMLElement>(".process-grid li");
       if (process && processStage && steps.length) contexts.push(gsap.context(() => {
         const layers = gsap.utils.toArray<HTMLElement>(".blueprint-layer");
-        gsap.set(steps, { autoAlpha: 0, y: 20 });
+        gsap.set(steps, { autoAlpha: 0, x: 0, y: 20 });
         gsap.set(layers, { autoAlpha: 0, scale: 0.965 });
-        gsap.set(steps[0], { autoAlpha: 1, y: 0 });
+        gsap.set(steps[0], { autoAlpha: 1, x: 0, y: 0 });
         gsap.set(layers[0], { autoAlpha: 1, scale: 0.965 });
         gsap.timeline({ scrollTrigger: { trigger: ".process-transition", start: "top 88%", end: "bottom 22%", scrub: 0.7, invalidateOnRefresh: true } })
           .fromTo(".process-transition span", { yPercent: 0, scaleX: 1 }, { yPercent: -104, scaleX: 0.96, ease: "none" }, 0)
@@ -107,9 +107,9 @@ export function MotionStory() {
         const timeline = gsap.timeline({ defaults: { ease: "power2.inOut" }, scrollTrigger: { trigger: processStage, start: "top top+=88", end: `+=${steps.length * 90}%`, pin: processStage, scrub: 0.65, anticipatePin: 1, invalidateOnRefresh: true } });
         steps.forEach((step, index) => {
           if (index) timeline
-            .to(steps[index - 1], { autoAlpha: 0, y: -16, duration: 0.24 })
+            .to(steps[index - 1], { autoAlpha: 0, x: 0, y: -16, duration: 0.24 })
             .to(layers[index - 1], { autoAlpha: 0, scale: 1.025, duration: 0.28 }, "<")
-            .to(step, { autoAlpha: 1, y: 0, duration: 0.34 }, "<0.12")
+            .to(step, { autoAlpha: 1, x: 0, y: 0, duration: 0.34 }, "<0.12")
             .to(layers[index], { autoAlpha: 1, scale: 1, duration: 0.38 }, "<");
           else timeline.to(layers[0], { scale: 1, duration: 0.38 });
           timeline
