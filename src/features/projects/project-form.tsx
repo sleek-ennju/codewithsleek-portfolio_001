@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import type { ProjectFormState } from "@/features/projects/schemas";
 
@@ -9,7 +9,8 @@ type ProjectValues = {
   title?: string; slug?: string; shortSummary?: string; projectType?: string; industries?: string[] | string; year?: number | string;
   liveUrl?: string | null; demoUrl?: string | null; repositoryUrl?: string | null; repositoryVisible?: boolean;
   featured?: boolean; displayOrder?: number | string; overview?: string | null; status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  cardImageId?: string | null; coverImageId?: string | null; socialImageId?: string | null; galleryImageIds?: string[];
+  cardImageId?: string | null; coverImageId?: string | null; socialImageId?: string | null; storyOverviewImageId?: string | null;
+  storyFeatureImageId?: string | null; storyDetailImageId?: string | null; galleryImageIds?: string[];
   problem?: string | null; goals?: string | null; role?: string | null; approach?: string | null; challenges?: string | null;
   solutions?: string | null; outcome?: string | null; lessons?: string | null; seoTitle?: string | null; seoDescription?: string | null;
   technologies?: string[] | string; metrics?: Array<{ label: string; value: string; unit: string | null }> | string;
@@ -17,6 +18,22 @@ type ProjectValues = {
 
 type MediaOption = { id: string; fileName: string; secureUrl: string; altText: string | null };
 type TechnologyOption = { id: string; name: string; category: string };
+
+function StoryImagePicker({ media, initialValues, error }: { media: MediaOption[]; initialValues: [string, string, string]; error?: string }) {
+  const [selected, setSelected] = useState(initialValues);
+  const frames = [
+    { name: "storyOverviewImageId", title: "01 · Overview", description: "The clearest full-product view." },
+    { name: "storyFeatureImageId", title: "02 · Feature", description: "A defining workflow or capability." },
+    { name: "storyDetailImageId", title: "03 · Detail", description: "A closer interface or product detail." },
+  ] as const;
+  return <div className="admin-story-images">
+    <div><strong>Landing-page story</strong><p>Choose the three ordered frames used by the featured-project scroll sequence.</p>{error && <span>{error}</span>}</div>
+    <div className="admin-story-image-grid">{frames.map((frame, index) => {
+      const asset = media.find((item) => item.id === selected[index]);
+      return <label key={frame.name}><span>{frame.title}</span><small>{frame.description}</small><select name={frame.name} value={selected[index]} onChange={(event) => setSelected((current) => current.map((value, itemIndex) => itemIndex === index ? event.target.value : value) as [string, string, string])}><option value="">Use automatic fallback</option>{media.map((item) => <option key={item.id} value={item.id}>{item.fileName}</option>)}</select><span className="admin-story-image-preview">{asset ? <Image src={asset.secureUrl} alt={asset.altText ?? ""} fill sizes="260px" /> : <i>Fallback preview</i>}</span></label>;
+    })}</div>
+  </div>;
+}
 
 export function ProjectForm({ action, values = {}, media, technologyOptions = [] }: { action: (state: ProjectFormState, data: FormData) => Promise<ProjectFormState>; values?: ProjectValues; media: MediaOption[]; technologyOptions?: TechnologyOption[] }) {
   const [state, formAction, pending] = useActionState(action, {});
@@ -65,6 +82,7 @@ export function ProjectForm({ action, values = {}, media, technologyOptions = []
           <label>Cover image<select name="coverImageId" defaultValue={activeValues.coverImageId ?? ""}><option value="">No cover image</option>{media.map((asset) => <option key={asset.id} value={asset.id}>{asset.fileName}</option>)}</select>{error("coverImageId") && <span>{error("coverImageId")}</span>}</label>
           <label>Social image<select name="socialImageId" defaultValue={activeValues.socialImageId ?? ""}><option value="">No social image</option>{media.map((asset) => <option key={asset.id} value={asset.id}>{asset.fileName}</option>)}</select></label>
         </div>
+        <StoryImagePicker media={media} initialValues={[activeValues.storyOverviewImageId ?? "", activeValues.storyFeatureImageId ?? "", activeValues.storyDetailImageId ?? ""]} error={error("storyOverviewImageId")} />
         <p>Select gallery images. Their current visual order follows the media library order.</p>
         {media.length === 0 ? <small>Upload images in Media before assigning project imagery.</small> : <div className="admin-project-media-grid">{media.map((asset) => <label key={asset.id}><input name="galleryImageIds" type="checkbox" value={asset.id} defaultChecked={activeValues.galleryImageIds?.includes(asset.id)} /><span className="admin-project-media-thumb"><Image src={asset.secureUrl} alt={asset.altText ?? ""} fill sizes="140px" /></span><span>{asset.fileName}</span></label>)}</div>}
       </fieldset>

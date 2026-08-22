@@ -36,6 +36,9 @@ export const projectFormSchema = z.object({
   cardImageId: z.string(),
   coverImageId: z.string(),
   socialImageId: z.string(),
+  storyOverviewImageId: z.string(),
+  storyFeatureImageId: z.string(),
+  storyDetailImageId: z.string(),
   galleryImageIds: z.array(z.string()).max(20),
 }).superRefine((project, context) => {
   if (project.repositoryVisible && !project.repositoryUrl) {
@@ -44,6 +47,10 @@ export const projectFormSchema = z.object({
   if (project.status === "PUBLISHED") {
     const required: Array<[keyof typeof project, string]> = [["overview", "Add an overview before publishing."], ["problem", "Describe the problem before publishing."], ["solutions", "Describe the solution before publishing."], ["outcome", "Describe the outcome before publishing."], ["cardImageId", "Choose a card image before publishing."], ["coverImageId", "Choose a cover image before publishing."]];
     for (const [path, message] of required) if (!project[path]) context.addIssue({ code: "custom", path: [path], message });
+  }
+  const storyImages = [project.storyOverviewImageId, project.storyFeatureImageId, project.storyDetailImageId].filter(Boolean);
+  if (new Set(storyImages).size !== storyImages.length) {
+    context.addIssue({ code: "custom", path: ["storyOverviewImageId"], message: "Choose three different images for the landing-page story." });
   }
 });
 
@@ -59,7 +66,7 @@ export type ProjectFormSnapshot = {
   liveUrl: string; demoUrl: string; repositoryUrl: string; repositoryVisible: boolean; featured: boolean;
   displayOrder: string;
   overview: string; status: "DRAFT" | "PUBLISHED" | "ARCHIVED"; cardImageId: string; coverImageId: string;
-  socialImageId: string; galleryImageIds: string[];
+  socialImageId: string; storyOverviewImageId: string; storyFeatureImageId: string; storyDetailImageId: string; galleryImageIds: string[];
   problem: string; goals: string; role: string; approach: string; challenges: string; solutions: string;
   outcome: string; lessons: string; seoTitle: string; seoDescription: string; technologies: string; metrics: string;
 };

@@ -26,7 +26,9 @@ function snapshot(formData: FormData): ProjectFormSnapshot {
     outcome: String(formData.get("outcome") ?? ""), lessons: String(formData.get("lessons") ?? ""), seoTitle: String(formData.get("seoTitle") ?? ""),
     seoDescription: String(formData.get("seoDescription") ?? ""), technologies: formData.getAll("technologies").map(String).join(", "), metrics: String(formData.get("metrics") ?? ""),
     cardImageId: String(formData.get("cardImageId") ?? ""), coverImageId: String(formData.get("coverImageId") ?? ""),
-    socialImageId: String(formData.get("socialImageId") ?? ""), galleryImageIds: formData.getAll("galleryImageIds").map(String),
+    socialImageId: String(formData.get("socialImageId") ?? ""),
+    storyOverviewImageId: String(formData.get("storyOverviewImageId") ?? ""), storyFeatureImageId: String(formData.get("storyFeatureImageId") ?? ""),
+    storyDetailImageId: String(formData.get("storyDetailImageId") ?? ""), galleryImageIds: formData.getAll("galleryImageIds").map(String),
   };
 }
 
@@ -36,8 +38,8 @@ function parseProject(formData: FormData) {
 }
 
 function projectData(data: ReturnType<typeof projectFormSchema.parse>, previousPublishedAt?: Date | null) {
-  const { galleryImageIds, technologies, metrics, ...project } = data;
-  void galleryImageIds; void technologies; void metrics;
+  const { galleryImageIds, storyOverviewImageId, storyFeatureImageId, storyDetailImageId, technologies, metrics, ...project } = data;
+  void galleryImageIds; void storyOverviewImageId; void storyFeatureImageId; void storyDetailImageId; void technologies; void metrics;
   return {
     ...project,
     liveUrl: data.liveUrl || null,
@@ -70,9 +72,17 @@ async function syncProjectDetails(transaction: Prisma.TransactionClient, project
 }
 
 async function mediaExists(data: ReturnType<typeof projectFormSchema.parse>) {
-  const ids = [...new Set([data.cardImageId, data.coverImageId, data.socialImageId, ...data.galleryImageIds].filter(Boolean))];
+  const ids = [...new Set([data.cardImageId, data.coverImageId, data.socialImageId, data.storyOverviewImageId, data.storyFeatureImageId, data.storyDetailImageId, ...data.galleryImageIds].filter(Boolean))];
   if (ids.length === 0) return true;
   return (await getDb().mediaAsset.count({ where: { id: { in: ids } } })) === ids.length;
+}
+
+async function syncProjectImages(transaction: Prisma.TransactionClient, projectId: string, data: ReturnType<typeof projectFormSchema.parse>) {
+  await transaction.projectImage.deleteMany({ where: { projectId, role: { in: ["gallery", "story"] } } });
+  const storyImageIds = [data.storyOverviewImageId, data.storyFeatureImageId, data.storyDetailImageId];
+  const storyImages = storyImageIds.flatMap((mediaId, position) => mediaId ? [{ projectId, mediaId, role: "story", position }] : []);
+  const galleryImages = data.galleryImageIds.map((mediaId, position) => ({ projectId, mediaId, role: "gallery", position }));
+  if (storyImages.length || galleryImages.length) await transaction.projectImage.createMany({ data: [...storyImages, ...galleryImages] });
 }
 
 export async function createProject(_state: ProjectFormState, formData: FormData): Promise<ProjectFormState> {
@@ -84,7 +94,7 @@ export async function createProject(_state: ProjectFormState, formData: FormData
   try {
     await getDb().$transaction(async (transaction) => {
       const project = await transaction.project.create({ data: projectData(parsed.data), select: { id: true } });
-      if (parsed.data.galleryImageIds.length) await transaction.projectImage.createMany({ data: parsed.data.galleryImageIds.map((mediaId, position) => ({ projectId: project.id, mediaId, role: "gallery", position })) });
+      await syncProjectImages(transaction, project.id, parsed.data);
       await syncProjectDetails(transaction, project.id, parsed.data);
       await transaction.auditLog.create({ data: { actorId: session.user.id, action: "PROJECT_CREATED", entityType: "Project", entityId: project.id } });
     });
@@ -109,8 +119,7 @@ export async function updateProject(projectId: string, _state: ProjectFormState,
   try {
     await getDb().$transaction(async (transaction) => {
       await transaction.project.update({ where: { id: projectId }, data: projectData(parsed.data, existing.publishedAt) });
-      await transaction.projectImage.deleteMany({ where: { projectId, role: "gallery" } });
-      if (parsed.data.galleryImageIds.length) await transaction.projectImage.createMany({ data: parsed.data.galleryImageIds.map((mediaId, position) => ({ projectId, mediaId, role: "gallery", position })) });
+      await syncProjectImages(transaction, projectId, parsed.data);
       await syncProjectDetails(transaction, projectId, parsed.data);
       await transaction.auditLog.create({ data: { actorId: session.user.id, action: "PROJECT_UPDATED", entityType: "Project", entityId: projectId, metadata: { status: parsed.data.status } } });
     });
