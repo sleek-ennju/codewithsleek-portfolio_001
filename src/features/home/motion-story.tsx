@@ -18,10 +18,7 @@ export function MotionStory() {
         gsap.timeline({ scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.65 } })
           .to(".hero-grid", { scale: 0.9, yPercent: 12, transformOrigin: "50% 100%", ease: "none" }, 0)
           .to(".hero h1", { xPercent: -3, yPercent: -7, ease: "none" }, 0)
-          .to(".hero h1 span", { xPercent: 9, ease: "none" }, 0)
-          .to(".hero-lede, .hero-actions", { yPercent: -15, ease: "none" }, 0)
-          .to(".metrics-grid", { yPercent: -7, ease: "none" }, 0)
-          .fromTo(".hero-work-frame", { scaleX: 0.45, scaleY: 0.45, opacity: 0.25 }, { scaleX: 7.2, scaleY: 4.4, opacity: 1, ease: "none" }, 0.18);
+          .to(".hero-lede, .hero-actions", { yPercent: -15, autoAlpha: 0.72, ease: "none" }, 0);
       }, hero));
 
       const works = document.querySelector<HTMLElement>(".works-section");
@@ -38,6 +35,18 @@ export function MotionStory() {
         visualGroups.forEach((group) => gsap.set(group[0], { autoAlpha: 1 }));
         gsap.set(cards[0], { autoAlpha: 1, y: 0, pointerEvents: "auto" });
         gsap.set(artwork[0], { clipPath: "inset(0% 0 0 0 round 2rem)" });
+        gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: { trigger: works, start: "top 76%", end: "top 18%", scrub: 0.65, invalidateOnRefresh: true },
+        })
+          .fromTo(".section-heading-row .section-kicker", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0)
+          .fromTo(".section-heading-row h2", { autoAlpha: 0, y: 72 }, { autoAlpha: 1, y: 0, duration: 0.34 }, 0.06)
+          .fromTo(".section-heading-row > .text-link", { autoAlpha: 0, x: 56 }, { autoAlpha: 1, x: 0, duration: 0.28 }, 0.14)
+          .fromTo(".work-story-progress", { autoAlpha: 0, scaleX: 0.18 }, { autoAlpha: 1, scaleX: 1, transformOrigin: "left center", duration: 0.36 }, 0.2)
+          .fromTo(cards[0], { autoAlpha: 0, y: 96 }, { autoAlpha: 1, y: 0, duration: 0.42 }, 0.25)
+          .fromTo(artwork[0], { clipPath: "inset(16% 0 0 0 round 2rem)", scale: 0.965 }, { clipPath: "inset(0% 0 0 0 round 2rem)", scale: 1, duration: 0.42 }, 0.28)
+          .fromTo(bodies[0], { autoAlpha: 0, x: 64 }, { autoAlpha: 1, x: 0, duration: 0.36 }, 0.34)
+          .fromTo(cards[0].querySelectorAll(".project-card-meta, h3, .project-summary, .project-card-footer"), { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.24, stagger: 0.045 }, 0.42);
         const timeline = gsap.timeline({
           defaults: { ease: "power2.inOut" },
           scrollTrigger: { trigger: works, start: "top top+=88", end: `+=${Math.max(420, cards.length * 115)}%`, pin: ".works-story-stage", scrub: 0.65, anticipatePin: 1, invalidateOnRefresh: true },
@@ -166,19 +175,6 @@ export function MotionStory() {
           .fromTo(".contact-form > *", { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, stagger: 0.045, ease: "none" }, 0.32)
           .fromTo(contact, { "--contact-word-shift": "-7%" }, { "--contact-word-shift": "0%", ease: "none" }, 0);
       }, contact));
-
-      const footer = document.querySelector<HTMLElement>(".site-footer");
-      if (footer) contexts.push(gsap.context(() => {
-        const timeline = gsap.timeline({
-          scrollTrigger: { trigger: footer, start: "top 88%", end: "bottom bottom", scrub: 0.65, invalidateOnRefresh: true },
-        });
-        timeline
-          .fromTo(footer, { "--story-inverse-percent": "100%" }, { "--story-inverse-percent": "0%", duration: 1.05, ease: "none" }, 0)
-          .fromTo(".footer-invitation > p", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "none" }, 0.04)
-          .fromTo(".footer-invitation > a", { autoAlpha: 0, y: 68 }, { autoAlpha: 1, y: 0, duration: 0.32, ease: "none" }, 0.1)
-          .fromTo(".footer-invitation > a i", { autoAlpha: 0, scale: 0.55, rotate: -35 }, { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.24, ease: "none" }, 0.3)
-          .fromTo(".footer-grid > *", { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.06, ease: "none" }, 0.58);
-      }, footer));
 
       for (const selector of [".proof-section"]) {
         const section = document.querySelector<HTMLElement>(selector);

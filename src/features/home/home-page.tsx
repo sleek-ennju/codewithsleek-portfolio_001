@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
-import { credibilityMetrics, processSteps } from "./content";
+import { processSteps } from "./content";
 import { ContactSection } from "@/features/contact/contact-section";
 import type { SiteSettings } from "@/features/settings/schemas";
 import { TestimonialDeck, type HomeTestimonial } from "./testimonial-deck";
@@ -19,26 +19,16 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
       <MotionStory />
       <section className="hero">
         <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-work-frame" aria-hidden="true"><span>INTERFACE / 01</span></div>
         <div className="hero-glow hero-glow-left" aria-hidden="true" />
         <div className="hero-glow hero-glow-right" aria-hidden="true" />
         <div className="container hero-content">
-          <p className="eyebrow hero-stack"><span aria-hidden="true">&lt;/&gt;</span> Frontend Engineer · React · Tailwind CSS · TypeScript · MERN Stack · Figma</p>
-          <h1>{settings.heroTitle}<br /><span>{settings.heroAccent}</span></h1>
+          <p className="eyebrow hero-stack"><span aria-hidden="true">&lt;/&gt;</span> Frontend Engineer · TypeScript · Next.js · Tailwind CSS · MERN Stack · PostgreSQL · Figma</p>
+          <h1><span className="hero-title-main">{settings.heroTitle}</span><span className="hero-title-accent">{settings.heroAccent}</span></h1>
           <p className="hero-lede">{settings.heroDescription}</p>
           <div className="hero-actions">
             <Link className="button button-dark liquid-button" href="#contact"><span>Start a project <DiagonalArrow /></span></Link>
             <Link className="button button-light liquid-button" href="#works"><span>Explore my work</span></Link>
           </div>
-
-          <dl className="metrics-grid">
-            {credibilityMetrics.map((metric) => (
-              <div key={metric.value}>
-                <dt>{metric.value}</dt>
-                <dd>{metric.label}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 

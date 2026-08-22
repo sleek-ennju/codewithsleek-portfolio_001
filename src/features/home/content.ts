@@ -1,18 +1,3 @@
-export const credibilityMetrics = [
-  {
-    value: "5 case studies",
-    label: "across fintech, healthcare, logistics, learning, and commerce",
-  },
-  {
-    value: "End to end",
-    label: "from product thinking and interface design through implementation",
-  },
-  {
-    value: "Accessible first",
-    label: "responsive systems designed for clarity, speed, and real people",
-  },
-] as const;
-
 export const processSteps = [
   {
     number: "01",

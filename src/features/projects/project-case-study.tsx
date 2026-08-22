@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import type { ProjectCaseStudyData } from "@/features/projects/queries";
 import { ProjectSectionRenderer } from "@/features/projects/project-section-renderer";
+import { CaseStudyMotion } from "@/features/projects/case-study-motion";
 
 const narrativeFields = [
   ["Problem", "problem"], ["Goals", "goals"], ["My role", "role"], ["Approach", "approach"],
@@ -11,6 +12,7 @@ const narrativeFields = [
 
 export function ProjectCaseStudy({ project, preview = false }: { project: ProjectCaseStudyData; preview?: boolean }) {
   return <main className="case-study">
+    <CaseStudyMotion />
     {preview && <div className="case-study-preview-banner"><strong>Admin preview</strong><span>This {project.status.toLowerCase()} project is not necessarily public.</span></div>}
     <header className="case-study-hero container">
       <Link className="text-link" href={preview ? `/admin/projects/${project.id}` : "/projects"}>← {preview ? "Return to editor" : "All projects"}</Link>
@@ -32,6 +34,6 @@ export function ProjectCaseStudy({ project, preview = false }: { project: Projec
     {project.technologies.length > 0 && <section className="case-study-stack container"><p className="section-kicker">Technology</p><div>{project.technologies.map(({ technology }) => <span key={technology.id}>{technology.name}</span>)}</div></section>}
     {project.images.length > 0 && <section className="case-study-gallery container"><p className="section-kicker">Project gallery</p><div>{project.images.map(({ id, media }) => <figure key={id}><Image src={media.secureUrl} alt={media.altText ?? ""} fill sizes="(max-width: 800px) 100vw, 50vw" /></figure>)}</div></section>}
     {project.testimonials.length > 0 && <section className="case-study-testimonials container"><p className="section-kicker">Client perspective</p>{project.testimonials.map((testimonial) => <figure key={testimonial.id}><blockquote>“{testimonial.quote}”</blockquote><figcaption><strong>{testimonial.authorName}</strong><span>{testimonial.authorRole}{testimonial.client ? ` · ${testimonial.client.name}` : ""}</span></figcaption></figure>)}</section>}
-    <footer className="case-study-footer container"><p>Have a similar challenge?</p><Link className="button button-dark" href="/#contact">Start a conversation</Link></footer>
+    <footer className="case-study-footer container"><p>Have a similar challenge?</p><Link className="button button-dark liquid-button" href="/#contact"><span>Start a conversation</span></Link></footer>
   </main>;
 }

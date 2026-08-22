@@ -30,8 +30,8 @@ export async function SiteHeader() {
 
         <MobileNavigation items={siteConfig.navigation} bookingUrl={settings.bookingUrl} />
 
-        <Link className="button button-dark nav-cta" href={settings.bookingUrl || "/#contact"} target={settings.bookingUrl ? "_blank" : undefined}>
-          Book a call
+        <Link className="button button-dark liquid-button nav-cta" href={settings.bookingUrl || "/#contact"} target={settings.bookingUrl ? "_blank" : undefined}>
+          <span>Book a call</span>
         </Link>
       </div>
     </header>
