@@ -2261,6 +2261,10 @@ a {
   margin-top: 1.5rem;
 }
 
+.admin-project-editor > .admin-panel + .admin-panel {
+  margin-top: 1.25rem;
+}
+
 .admin-page-heading .admin-eyebrow,
 .admin-main > .admin-eyebrow {
   margin-top: 0;
