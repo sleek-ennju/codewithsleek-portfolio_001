@@ -12,6 +12,17 @@ function checkbox(formData: FormData, name: string) {
   return formData.get(name) === "on";
 }
 
+function isDatabaseUnavailable(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const code = "code" in error && typeof error.code === "string" ? error.code : "";
+  const message = "message" in error && typeof error.message === "string" ? error.message : "";
+  return ["P1001", "P1002", "P1017"].includes(code) || /can't reach database server|connection (?:closed|refused|timed out)|ECONNREFUSED|ETIMEDOUT/i.test(message);
+}
+
+function databaseUnavailableState(values: ProjectFormSnapshot): ProjectFormState {
+  return { message: "The database is temporarily unavailable. Your form values are still here—please check your connection and try saving again.", values, submissionId: crypto.randomUUID() };
+}
+
 function snapshot(formData: FormData): ProjectFormSnapshot {
   const status = String(formData.get("status"));
   return {
@@ -89,9 +100,9 @@ export async function createProject(_state: ProjectFormState, formData: FormData
   const session = await requireAdmin();
   const { parsed, values } = parseProject(formData);
   if (!parsed.success) return { message: "Review the highlighted fields.", errors: parsed.error.flatten().fieldErrors, values, submissionId: crypto.randomUUID() };
-  if (!(await mediaExists(parsed.data))) return { message: "One or more selected media assets no longer exist.", values, submissionId: crypto.randomUUID() };
 
   try {
+    if (!(await mediaExists(parsed.data))) return { message: "One or more selected media assets no longer exist.", values, submissionId: crypto.randomUUID() };
     await getDb().$transaction(async (transaction) => {
       const project = await transaction.project.create({ data: projectData(parsed.data), select: { id: true } });
       await syncProjectImages(transaction, project.id, parsed.data);
@@ -100,6 +111,10 @@ export async function createProject(_state: ProjectFormState, formData: FormData
     });
   } catch (error) {
     if (typeof error === "object" && error && "code" in error && error.code === "P2002") return { message: "That slug is already in use.", errors: { slug: ["Choose a unique slug."] }, values, submissionId: crypto.randomUUID() };
+    if (isDatabaseUnavailable(error)) {
+      console.error("[projects:create] Database unavailable", { code: "code" in (error as object) ? (error as { code?: unknown }).code : undefined });
+      return databaseUnavailableState(values);
+    }
     throw error;
   }
 
@@ -111,12 +126,11 @@ export async function updateProject(projectId: string, _state: ProjectFormState,
   const session = await requireAdmin();
   const { parsed, values } = parseProject(formData);
   if (!parsed.success) return { message: "Review the highlighted fields.", errors: parsed.error.flatten().fieldErrors, values, submissionId: crypto.randomUUID() };
-  if (!(await mediaExists(parsed.data))) return { message: "One or more selected media assets no longer exist.", values, submissionId: crypto.randomUUID() };
-
-  const existing = await getDb().project.findUnique({ where: { id: projectId }, select: { publishedAt: true } });
-  if (!existing) return { message: "This project no longer exists." };
 
   try {
+    if (!(await mediaExists(parsed.data))) return { message: "One or more selected media assets no longer exist.", values, submissionId: crypto.randomUUID() };
+    const existing = await getDb().project.findUnique({ where: { id: projectId }, select: { publishedAt: true } });
+    if (!existing) return { message: "This project no longer exists." };
     await getDb().$transaction(async (transaction) => {
       await transaction.project.update({ where: { id: projectId }, data: projectData(parsed.data, existing.publishedAt) });
       await syncProjectImages(transaction, projectId, parsed.data);
@@ -125,6 +139,10 @@ export async function updateProject(projectId: string, _state: ProjectFormState,
     });
   } catch (error) {
     if (typeof error === "object" && error && "code" in error && error.code === "P2002") return { message: "That slug is already in use.", errors: { slug: ["Choose a unique slug."] }, values, submissionId: crypto.randomUUID() };
+    if (isDatabaseUnavailable(error)) {
+      console.error("[projects:update] Database unavailable", { projectId, code: "code" in (error as object) ? (error as { code?: unknown }).code : undefined });
+      return databaseUnavailableState(values);
+    }
     throw error;
   }
 
