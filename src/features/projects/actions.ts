@@ -5,18 +5,12 @@ import { redirect } from "next/navigation";
 
 import { projectFormSchema, projectSectionFormSchema, type ProjectFormSnapshot, type ProjectFormState, type ProjectSectionFormState } from "@/features/projects/schemas";
 import type { Prisma } from "@/generated/prisma/client";
+import { isDatabaseUnavailable } from "@/server/database-resilience";
 import { getDb } from "@/server/db";
 import { requireAdmin } from "@/server/permissions/require-admin";
 
 function checkbox(formData: FormData, name: string) {
   return formData.get(name) === "on";
-}
-
-function isDatabaseUnavailable(error: unknown) {
-  if (!error || typeof error !== "object") return false;
-  const code = "code" in error && typeof error.code === "string" ? error.code : "";
-  const message = "message" in error && typeof error.message === "string" ? error.message : "";
-  return ["P1001", "P1002", "P1017"].includes(code) || /can't reach database server|connection (?:closed|refused|timed out)|ECONNREFUSED|ETIMEDOUT/i.test(message);
 }
 
 function databaseUnavailableState(values: ProjectFormSnapshot): ProjectFormState {

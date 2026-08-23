@@ -1,10 +1,14 @@
+import { connection } from "next/server";
+
 import { HomePage } from "@/features/home/home-page";
+import { defaultSiteSettings } from "@/features/settings/schemas";
 import { getDb } from "@/server/db";
 import { getSiteSettings } from "@/features/settings/queries";
+import { isDatabaseUnavailable, withDatabaseRetry } from "@/server/database-resilience";
 
-export default async function Page() {
+async function loadHomePageData() {
   const db = getDb();
-  const [projects, technologies, performanceAudits, testimonials, settings] = await Promise.all([
+  return Promise.all([
     db.project.findMany({ where: { status: "PUBLISHED", featured: true }, orderBy: [{ displayOrder: "asc" }, { publishedAt: "desc" }], take: 3, select: { id: true, title: true, slug: true, shortSummary: true, projectType: true, year: true, cardImage: { select: { secureUrl: true, altText: true } }, coverImage: { select: { secureUrl: true, altText: true } }, socialImage: { select: { secureUrl: true, altText: true } }, images: { where: { role: { in: ["story", "gallery"] } }, orderBy: [{ role: "desc" }, { position: "asc" }], select: { role: true, position: true, media: { select: { secureUrl: true, altText: true } } } }, technologies: { orderBy: { position: "asc" }, take: 4, select: { technology: { select: { id: true, name: true } } } } } }),
     db.technology.findMany({ where: { projects: { some: { project: { status: "PUBLISHED" } } } }, orderBy: [{ position: "asc" }, { name: "asc" }], select: { id: true, name: true, category: true } }),
     db.performanceAudit.findMany({
@@ -26,5 +30,21 @@ export default async function Page() {
     db.testimonial.findMany({ where: { published: true, featured: true }, orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }], take: 3, select: { id: true, authorName: true, authorRole: true, quote: true, client: { select: { name: true } }, photo: { select: { secureUrl: true, altText: true } }, project: { select: { title: true, slug: true } } } }),
     getSiteSettings(),
   ]);
-  return <HomePage projects={projects} technologies={technologies} performanceAudits={performanceAudits} testimonials={testimonials} settings={settings} />;
+}
+
+export default async function Page() {
+  await connection();
+
+  try {
+    const [projects, technologies, performanceAudits, testimonials, settings] = await withDatabaseRetry(loadHomePageData);
+    return <HomePage projects={projects} technologies={technologies} performanceAudits={performanceAudits} testimonials={testimonials} settings={settings} />;
+  } catch (error) {
+    if (!isDatabaseUnavailable(error)) throw error;
+
+    console.error("[website:home] Database temporarily unavailable after retries", {
+      code: typeof error === "object" && error && "code" in error ? error.code : undefined,
+    });
+
+    return <HomePage projects={[]} technologies={[]} performanceAudits={[]} testimonials={[]} settings={defaultSiteSettings} />;
+  }
 }
