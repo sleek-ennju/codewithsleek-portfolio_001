@@ -24,17 +24,7 @@ export function MotionStory() {
       const works = document.querySelector<HTMLElement>(".works-section");
       const cards = gsap.utils.toArray<HTMLElement>(".works-section .project-card");
       if (works && cards.length) contexts.push(gsap.context(() => {
-        const artwork = cards.map((card) => card.querySelector<HTMLElement>(".project-art"));
-        const visualGroups = cards.map((card) => gsap.utils.toArray<HTMLElement>(card.querySelectorAll(".project-visual-slide")));
-        const images = visualGroups.flat();
-        const bodies = cards.map((card) => card.querySelector<HTMLElement>(".project-card-body"));
-        const visualLabels = cards.map((card) => card.querySelector<HTMLElement>(".project-visual-status b"));
-        gsap.set(cards, { autoAlpha: 0, y: 28, pointerEvents: "none" });
-        gsap.set(artwork, { clipPath: "inset(100% 0 0 0 round 2rem)" });
-        gsap.set(images, { autoAlpha: 0, scale: 1.02 });
-        visualGroups.forEach((group) => gsap.set(group[0], { autoAlpha: 1 }));
-        gsap.set(cards[0], { autoAlpha: 1, y: 0, pointerEvents: "auto" });
-        gsap.set(artwork[0], { clipPath: "inset(0% 0 0 0 round 2rem)" });
+        const progress = works.querySelector<HTMLElement>(".work-story-progress > span");
         gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: { trigger: works, start: "top 76%", end: "top 18%", scrub: 0.65, invalidateOnRefresh: true },
@@ -42,50 +32,22 @@ export function MotionStory() {
           .fromTo(".section-heading-row .section-kicker", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 0)
           .fromTo(".section-heading-row h2", { autoAlpha: 0, y: 72 }, { autoAlpha: 1, y: 0, duration: 0.34 }, 0.06)
           .fromTo(".section-heading-row > .text-link", { autoAlpha: 0, x: 56 }, { autoAlpha: 1, x: 0, duration: 0.28 }, 0.14)
-          .fromTo(".work-story-progress", { autoAlpha: 0, scaleX: 0.18 }, { autoAlpha: 1, scaleX: 1, transformOrigin: "left center", duration: 0.36 }, 0.2)
-          .fromTo(cards[0], { autoAlpha: 0, y: 96 }, { autoAlpha: 1, y: 0, duration: 0.42 }, 0.25)
-          .fromTo(artwork[0], { clipPath: "inset(16% 0 0 0 round 2rem)", scale: 0.965 }, { clipPath: "inset(0% 0 0 0 round 2rem)", scale: 1, duration: 0.42 }, 0.28)
-          .fromTo(bodies[0], { autoAlpha: 0, x: 64 }, { autoAlpha: 1, x: 0, duration: 0.36 }, 0.34)
-          .fromTo(cards[0].querySelectorAll(".project-card-meta, h3, .project-summary, .project-card-footer"), { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.24, stagger: 0.045 }, 0.42);
-        const timeline = gsap.timeline({
-          defaults: { ease: "power2.inOut" },
-          scrollTrigger: { trigger: works, start: "top top+=88", end: `+=${Math.max(420, cards.length * 115)}%`, pin: ".works-story-stage", scrub: 0.65, anticipatePin: 1, invalidateOnRefresh: true },
-        });
-        const appendVisualStory = (index: number) => {
-          const group = visualGroups[index];
-          if (!group.length) {
-            timeline.to(bodies[index], { y: -7, duration: 0.7, ease: "none" });
-            return;
-          }
-          if (group.length === 1) {
-            timeline
-              .to(group[0], { scale: 1.065, duration: 0.75, ease: "none" })
-              .to(bodies[index], { y: -7, duration: 0.75, ease: "none" }, "<");
-            return;
-          }
-          group.slice(1).forEach((slide, slideIndex) => {
-            const previous = group[slideIndex];
-            timeline
-              .to(previous, { scale: 1.055, duration: 0.32, ease: "none" })
-              .to(previous, { autoAlpha: 0, scale: 1.085, duration: 0.24 })
-              .fromTo(slide, { autoAlpha: 0, scale: 1.01 }, { autoAlpha: 1, scale: 1.045, duration: 0.34 }, "<")
-              .set(visualLabels[index], { attr: { "data-current": `${"\u200B"}${String(slideIndex + 2).padStart(2, "0")}` } }, "<");
-          });
-          timeline
-            .to(group.at(-1)!, { scale: 1.065, duration: 0.28, ease: "none" })
-            .to(bodies[index], { y: -7, duration: 0.28, ease: "none" }, "<");
-        };
-        appendVisualStory(0);
+          .fromTo(".work-story-progress", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24 }, 0.2);
+
+        if (progress) gsap.fromTo(progress, { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: { trigger: works, start: "top 48%", end: "bottom 52%", scrub: 0.45, invalidateOnRefresh: true } });
+
         cards.forEach((card, index) => {
-          if (!index) return;
-          timeline
-            .to(cards[index - 1], { y: -20, autoAlpha: 0, pointerEvents: "none", duration: 0.3 })
-            .to(card, { autoAlpha: 1, y: 0, pointerEvents: "auto", duration: 0.36 }, "<0.16")
-            .to(artwork[index], { clipPath: "inset(0% 0 0 0 round 2rem)", duration: 0.52 }, "<");
-          appendVisualStory(index);
+          const art = card.querySelector<HTMLElement>(".project-art");
+          const body = card.querySelector<HTMLElement>(".project-card-body");
+          const fromLeft = index % 2 === 0;
+          if (!art || !body) return;
+
+          gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: card, start: "top 88%", end: "top 30%", scrub: 0.6, invalidateOnRefresh: true } })
+            .fromTo(card, { autoAlpha: 0.45, y: 96 }, { autoAlpha: 1, y: 0, duration: 0.72 }, 0)
+            .fromTo(art, { clipPath: "polygon(0 0, 12% 0, 0 100%, 0 100%)", scale: 0.97 }, { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", scale: 1, duration: 0.82 }, 0)
+            .fromTo(body, { autoAlpha: 0, x: fromLeft ? 72 : -72 }, { autoAlpha: 1, x: 0, duration: 0.68 }, 0.12)
+            .fromTo(body.querySelectorAll(".project-card-meta, h3, .project-summary, .project-card-footer"), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.44, stagger: 0.055 }, 0.26);
         });
-        const storyDuration = timeline.duration();
-        timeline.fromTo(".work-story-progress span", { scaleX: 0 }, { scaleX: 1, duration: storyDuration, ease: "none" }, 0);
       }, works));
 
       const process = document.querySelector<HTMLElement>(".process-section");

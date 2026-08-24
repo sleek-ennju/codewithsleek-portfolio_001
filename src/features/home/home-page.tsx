@@ -7,6 +7,7 @@ import { ContactSection } from "@/features/contact/contact-section";
 import type { SiteSettings } from "@/features/settings/schemas";
 import { TestimonialDeck, type HomeTestimonial } from "./testimonial-deck";
 import { MotionStory } from "./motion-story";
+import { ProjectVisualGallery } from "./project-visual-gallery";
 
 type ProjectVisual = { secureUrl: string; altText: string | null };
 type FeaturedProject = { id: string; title: string; slug: string; shortSummary: string; projectType: string; year: number; cardImage: ProjectVisual | null; coverImage: ProjectVisual | null; socialImage: ProjectVisual | null; images: Array<{ role: string; position: number; media: ProjectVisual }>; technologies: Array<{ technology: { id: string; name: string } }> };
@@ -42,24 +43,18 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
             <Link className="text-link" href="/projects">View all case studies <DiagonalArrow /></Link>
           </div>
 
-          {projects.length === 0 ? <div className="home-projects-empty"><strong>Selected case studies are being prepared.</strong><p>Published, featured work will appear here.</p></div> : <><div className="work-story-progress" aria-hidden="true"><span /></div><div className="project-grid">
+          {projects.length === 0 ? <div className="home-projects-empty"><strong>Selected case studies are being prepared.</strong><p>Published, featured work will appear here.</p></div> : <><div className="work-story-progress" aria-hidden="true"><span /><ol>{projects.slice(0, 3).map((project, index) => <li key={project.id}>{String(index + 1).padStart(2, "0")}</li>)}</ol></div><div className="project-grid">
             {projects.slice(0, 3).map((project, index) => {
               const storyVisuals = project.images.filter((image) => image.role === "story").sort((a, b) => a.position - b.position).map(({ media }) => media);
               const fallbackVisuals = [project.cardImage, project.coverImage, project.socialImage, ...project.images.filter((image) => image.role !== "story").map(({ media }) => media)]
                 .filter((visual): visual is ProjectVisual => Boolean(visual))
                 .filter((visual, visualIndex, visuals) => visuals.findIndex(({ secureUrl }) => secureUrl === visual.secureUrl) === visualIndex);
               const projectVisuals = [...storyVisuals, ...fallbackVisuals.filter((fallback) => !storyVisuals.some((story) => story.secureUrl === fallback.secureUrl))].slice(0, 3);
-              const trailerVisuals = projectVisuals.length === 1
-                ? ["overview", "feature", "detail"].map((frame) => ({ ...projectVisuals[0], frame }))
-                : projectVisuals.map((visual, visualIndex) => ({ ...visual, frame: visualIndex === 0 ? "overview" : visualIndex === 1 ? "feature" : "detail" }));
+              const trailerVisuals = projectVisuals.map((visual, visualIndex) => ({ ...visual, frame: visualIndex === 0 ? "overview" : visualIndex === 1 ? "feature" : "detail" }));
               return <article className="project-card" key={project.id}>
-                <Link href={`/projects/${project.slug}`} aria-label={`Read the ${project.title} case study`}>
-                  <div className={`project-art project-art-${index + 1}`}>
-                    {trailerVisuals.map((visual, visualIndex) => <Image className="project-visual-slide" data-visual-frame={visual.frame} data-visual-index={visualIndex} key={`${visual.secureUrl}-${visualIndex}`} src={visual.secureUrl} alt={visualIndex === 0 ? visual.altText ?? `${project.title} product overview` : ""} fill sizes="(max-width: 800px) 100vw, 58vw" loading={index === 0 ? "eager" : "lazy"} />)}
-                    <span>Case study {String(index + 1).padStart(2, "0")}</span>
-                    {trailerVisuals.length > 1 && <small className="project-visual-status" aria-hidden="true"><b data-current={`${"\u200B"}01`} /> / {String(trailerVisuals.length).padStart(2, "0")}</small>}
-                    <i><DiagonalArrow /></i>
-                  </div>
+                <div className="project-card-layout">
+                  <ProjectVisualGallery projectTitle={project.title} projectHref={`/projects/${project.slug}`} caseStudyNumber={String(index + 1).padStart(2, "0")} visuals={trailerVisuals} eager={index === 0} />
+                  <Link className="project-copy-link" href={`/projects/${project.slug}`} aria-label={`Read the ${project.title} case study`}>
                   <div className="project-card-body">
                     <div className="project-card-meta"><span>{project.projectType}</span><time>{project.year}</time></div>
                     <h3>{project.title}</h3>
@@ -69,7 +64,8 @@ export function HomePage({ projects, technologies, performanceAudits, testimonia
                       <span className="project-card-cta">View case study <i><DiagonalArrow /></i></span>
                     </div>
                   </div>
-                </Link>
+                  </Link>
+                </div>
               </article>;
             })}
           </div></>}

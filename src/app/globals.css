@@ -434,7 +434,7 @@ a {
   grid-column: span 4;
 }
 
-.project-card > a {
+.project-card-layout {
   min-width: 0;
   height: 100%;
   display: flex;
@@ -442,6 +442,7 @@ a {
   border-radius: var(--radius-md);
   outline-offset: 0.35rem;
 }
+.project-copy-link { min-width: 0; outline-offset: 0.35rem; }
 
 .project-card:nth-child(n + 4) {
   grid-column: span 6;
@@ -458,21 +459,25 @@ a {
   background-color: #eceef2;
   box-shadow: inset 0 0 0 1px rgb(16 16 16 / 0.05);
 }
-.project-art img { object-fit: cover; transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease; }
-.project-art .project-visual-slide { opacity: 0; }
-.project-art .project-visual-slide:first-of-type { opacity: 1; }
+.project-gallery-media { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.project-art img { object-fit: cover; transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 650ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease; }
+.project-art .project-visual-slide { opacity: 0; transform: scale(1.025); }
+.project-art .project-visual-slide[data-active="true"] { opacity: 1; transform: scale(1); }
 .project-art .project-visual-slide[data-visual-frame="overview"] { object-position: 50% 50%; }
 .project-art .project-visual-slide[data-visual-frame="feature"] { object-position: 18% 50%; }
 .project-art .project-visual-slide[data-visual-frame="detail"] { object-position: 82% 50%; }
-.project-card a:hover .project-art img { transform: scale(1.025); }
+.project-card:hover .project-art .project-visual-slide[data-active="true"] { transform: scale(1.018); }
 .project-art span { position: relative; z-index: 2; }
 
-.project-visual-status {
+.project-gallery-controls {
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   top: 1.2rem;
   right: 1.2rem;
-  padding: 0.48rem 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0.28rem;
   border: 1px solid rgb(255 255 255 / 0.35);
   border-radius: 999px;
   background: rgb(12 15 22 / 0.54);
@@ -481,8 +486,12 @@ a {
   letter-spacing: 0.08em;
   backdrop-filter: blur(10px);
 }
-.project-visual-status b { color: white; font-weight: 700; }
-.project-visual-status b::before { content: attr(data-current); }
+.project-gallery-controls small { min-width: 3.65rem; color: rgb(255 255 255 / 0.72); text-align: center; }
+.project-gallery-controls b { color: white; font-weight: 700; }
+.project-gallery-controls button { width: 1.8rem; height: 1.8rem; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: white; cursor: pointer; transition: background-color 180ms ease; }
+.project-gallery-controls button:hover, .project-gallery-controls button:focus-visible { background: rgb(255 255 255 / 0.16); }
+.project-gallery-controls svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.project-art-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; outline-offset: 0.25rem; }
 
 .project-art::after {
   content: "";
@@ -510,8 +519,8 @@ a {
   transition: transform 220ms ease, opacity 220ms ease;
 }
 
-.project-card a:hover .project-art i,
-.project-card a:focus-visible .project-art i {
+.project-art-link:hover i,
+.project-art-link:focus-visible i {
   transform: translateY(0);
   opacity: 1;
 }
@@ -1726,8 +1735,7 @@ a {
 
 .story-motion-ready .project-card:nth-child(even).is-story-visible { transform: none; }
 .story-motion-ready .project-art { --story-parallax: 0px; }
-.story-motion-ready .project-art img { translate: 0 var(--story-parallax); scale: 1.045; }
-.story-motion-ready .project-card a:hover .project-art img { scale: 1.07; }
+.story-motion-ready .project-art img { translate: 0 var(--story-parallax); }
 
 .story-motion-ready .process-section {
   isolation: isolate;
@@ -1876,7 +1884,8 @@ a {
 /* World-class narrative layer: LOGIC -> STRUCTURE -> INTERFACE -> PROOF */
 .story-motion-ready .proof-section::after { right: 0; }
 .work-story-progress { height: 2px; margin: clamp(1rem, 2vh, 2rem) 0; overflow: hidden; background: #dfe3ea; }
-.work-story-progress span { width: 100%; height: 100%; display: block; background: #2462d8; transform: scaleX(0.2); transform-origin: left; }
+.work-story-progress > span { width: 100%; height: 100%; display: block; background: #2462d8; transform: scaleX(0.2); transform-origin: left; }
+.work-story-progress ol { display: none; }
 
 .process-story-layout { position: relative; display: grid; grid-template-columns: minmax(18rem, 0.82fr) minmax(0, 1.18fr); gap: clamp(3rem, 8vw, 8rem); margin-top: clamp(2.5rem, 5vw, 5rem); }
 .process-blueprint { position: relative; min-height: 28rem; overflow: hidden; border: 1px solid rgb(255 255 255 / 0.16); border-radius: 1.5rem; background: #0d0e10; box-shadow: inset 0 0 0 1px rgb(142 180 255 / 0.025); }
@@ -1918,18 +1927,24 @@ a {
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .story-motion-ready .works-section,
   .story-motion-ready .process-section { overflow: visible; border-radius: 0; }
-  .works-section { padding-block: 0; }
-  .works-story-stage { width: 100%; max-width: none; height: calc(100svh - 5.5rem); display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding: clamp(1rem, 2.5vh, 1.75rem) clamp(1.25rem, 5.5vw, 6.5rem); }
+  .works-section { padding-block: clamp(4.5rem, 8vw, 8rem); }
+  .works-story-stage { position: relative; width: 100%; max-width: none; height: auto; display: block; padding: 0 clamp(1.25rem, 5.5vw, 6.5rem); }
   .works-story-stage .section-heading-row { align-items: end; gap: 2rem; }
   .works-story-stage .section-kicker { margin-bottom: 0.45rem; }
   .works-story-stage .section-heading-row h2 { max-width: 16ch; font-size: clamp(2.4rem, 4vw, 4.35rem); line-height: 0.95; }
   .works-story-stage .section-heading-row > .text-link { margin-bottom: 0.25rem; padding: 0.8rem 1rem; border: 1px solid #d8dce4; border-radius: 999px; white-space: nowrap; }
-  .works-story-stage .project-grid { position: relative; height: 100%; min-height: 0; display: block; overflow: clip; margin: 0; }
-  .works-story-stage .project-card { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; grid-column: auto; clip-path: none !important; }
+  .works-story-stage > .work-story-progress { position: absolute; z-index: 4; top: clamp(10rem, 17vw, 15rem); bottom: 2rem; left: clamp(0.65rem, 2.6vw, 3rem); width: 2px; height: auto; margin: 0; overflow: visible; border-radius: 99px; }
+  .works-story-stage > .work-story-progress > span { width: 100%; height: 100%; transform: scaleY(0); transform-origin: top; }
+  .works-story-stage > .work-story-progress ol { position: absolute; inset: 0 auto 0 0; display: flex; flex-direction: column; justify-content: space-around; margin: 0; padding: 0; list-style: none; }
+  .works-story-stage > .work-story-progress li { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; translate: -50% 0; border: 1px solid #d9dde5; border-radius: 50%; background: #f8f9fb; color: #69707d; font: 650 0.58rem var(--font-mono), monospace; }
+  .works-story-stage .project-grid { position: relative; height: auto; min-height: 0; display: grid; grid-template-columns: 1fr; gap: clamp(7rem, 12vw, 12rem); overflow: visible; margin: clamp(3rem, 6vw, 6rem) 0 0; }
+  .works-story-stage .project-card { position: relative; inset: auto; width: 100%; min-height: clamp(31rem, 66svh, 43rem); height: auto; overflow: visible; grid-column: auto; clip-path: none !important; }
   .works-story-stage .project-card:nth-child(n) { transform: none; }
-  .works-story-stage .project-card > a { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; overflow: visible; }
+  .works-story-stage .project-card-layout { height: 100%; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr); gap: clamp(2.5rem, 5vw, 5.5rem); align-items: center; overflow: visible; }
+  .works-story-stage .project-card:nth-child(even) .project-art { grid-column: 2; grid-row: 1; }
+  .works-story-stage .project-card:nth-child(even) .project-copy-link { grid-column: 1; grid-row: 1; }
   .works-story-stage .project-art,
-  .works-story-stage .project-card:nth-child(n + 4) .project-art { width: 100%; height: 24rem; min-height: 0; max-height: 100%; aspect-ratio: auto; align-self: center; border-radius: clamp(1.4rem, 3vw, 2.5rem); }
+  .works-story-stage .project-card:nth-child(n + 4) .project-art { width: 100%; height: auto; min-height: 24rem; max-height: none; aspect-ratio: 16 / 10; align-self: center; border-radius: clamp(1.4rem, 3vw, 2.5rem); }
   .works-story-stage .project-card-body { min-height: 0; max-height: 100%; padding: 0 0.25rem 0 0; overflow: visible; }
   .works-story-stage .project-card-meta { overflow: visible; }
   .works-story-stage .project-card-meta span { max-width: calc(100% - 5rem); }
