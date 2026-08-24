@@ -1924,12 +1924,12 @@ a {
   .works-story-stage .section-kicker { margin-bottom: 0.45rem; }
   .works-story-stage .section-heading-row h2 { max-width: 16ch; font-size: clamp(2.4rem, 4vw, 4.35rem); line-height: 0.95; }
   .works-story-stage .section-heading-row > .text-link { margin-bottom: 0.25rem; padding: 0.8rem 1rem; border: 1px solid #d8dce4; border-radius: 999px; white-space: nowrap; }
-  .works-story-stage .project-grid { position: relative; height: 100%; min-height: 0; display: block; margin: 0; }
+  .works-story-stage .project-grid { position: relative; height: 100%; min-height: 0; display: block; overflow: clip; margin: 0; }
   .works-story-stage .project-card { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; grid-column: auto; clip-path: none !important; }
   .works-story-stage .project-card:nth-child(n) { transform: none; }
   .works-story-stage .project-card > a { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; overflow: visible; }
   .works-story-stage .project-art,
-  .works-story-stage .project-card:nth-child(n + 4) .project-art { width: 100%; height: clamp(20rem, 52svh, 24rem); min-height: 20rem; aspect-ratio: auto; align-self: center; border-radius: clamp(1.4rem, 3vw, 2.5rem); }
+  .works-story-stage .project-card:nth-child(n + 4) .project-art { width: 100%; height: 24rem; min-height: 0; max-height: 100%; aspect-ratio: auto; align-self: center; border-radius: clamp(1.4rem, 3vw, 2.5rem); }
   .works-story-stage .project-card-body { min-height: 0; max-height: 100%; padding: 0 0.25rem 0 0; overflow: visible; }
   .works-story-stage .project-card-meta { overflow: visible; }
   .works-story-stage .project-card-meta span { max-width: calc(100% - 5rem); }

@@ -10,7 +10,7 @@ export const getSiteSettings = cache(async () => {
     return parsed.success ? parsed.data : defaultSiteSettings;
   } catch (error) {
     if (!isDatabaseUnavailable(error)) throw error;
-    console.error("[settings:read] Database temporarily unavailable after retries");
+    console.warn("[settings:read] Database temporarily unavailable after retries");
     return defaultSiteSettings;
   }
 });

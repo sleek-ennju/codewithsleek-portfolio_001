@@ -32,19 +32,22 @@ async function loadHomePageData() {
   ]);
 }
 
-export default async function Page() {
-  await connection();
-
+async function resolveHomePageData(): Promise<Awaited<ReturnType<typeof loadHomePageData>>> {
   try {
-    const [projects, technologies, performanceAudits, testimonials, settings] = await withDatabaseRetry(loadHomePageData);
-    return <HomePage projects={projects} technologies={technologies} performanceAudits={performanceAudits} testimonials={testimonials} settings={settings} />;
+    return await withDatabaseRetry(loadHomePageData);
   } catch (error) {
     if (!isDatabaseUnavailable(error)) throw error;
 
-    console.error("[website:home] Database temporarily unavailable after retries", {
+    console.warn("[website:home] Database temporarily unavailable after retries", {
       code: typeof error === "object" && error && "code" in error ? error.code : undefined,
     });
 
-    return <HomePage projects={[]} technologies={[]} performanceAudits={[]} testimonials={[]} settings={defaultSiteSettings} />;
+    return [[], [], [], [], defaultSiteSettings];
   }
+}
+
+export default async function Page() {
+  await connection();
+  const [projects, technologies, performanceAudits, testimonials, settings] = await resolveHomePageData();
+  return <HomePage projects={projects} technologies={technologies} performanceAudits={performanceAudits} testimonials={testimonials} settings={settings} />;
 }
