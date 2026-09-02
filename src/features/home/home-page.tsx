@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
-import { ResumeDownload } from "@/components/shared/resume-download";
 import { processSteps } from "./content";
 import { ContactSection } from "@/features/contact/contact-section";
 import type { SiteSettings } from "@/features/settings/schemas";
@@ -462,9 +461,6 @@ export function HomePage({
               <Link className="button button-light liquid-button" href="/projects">
                 <span>Browse case studies</span>
               </Link>
-              <ResumeDownload
-                href={settings.resumeUrl || "/documents/Emmanuel-Ihenacho-Resume.pdf"}
-              />
             </div>
           </div>
         </div>

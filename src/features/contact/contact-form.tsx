@@ -88,13 +88,8 @@ export function ContactForm() {
         <input autoComplete="off" name="companyWebsite" tabIndex={-1} type="text" />
       </label>
 
-      {state.status === "error" && state.message ? (
-        <p className="contact-feedback contact-feedback-error" aria-live="polite" role="alert">
-          {state.message}
-        </p>
-      ) : null}
-      {state.status === "success" && state.message ? (
-        <ContactNotification key={state.submissionId} message={state.message} />
+      {state.status && state.message ? (
+        <ContactNotification key={state.submissionId} message={state.message} tone={state.status} />
       ) : null}
 
       <button className="button button-dark" disabled={pending} type="submit">

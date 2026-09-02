@@ -19,6 +19,7 @@ export function MobileNavigation({
   const [phase, setPhase] = useState<"closed" | "opening" | "open" | "closing">("closed");
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const openedWithKeyboardRef = useRef(false);
   const visible = phase !== "closed";
   const expanded = phase === "opening" || phase === "open";
 
@@ -48,7 +49,11 @@ export function MobileNavigation({
       phase === "opening"
         ? window.setTimeout(
             () => {
-              dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+              if (openedWithKeyboardRef.current) {
+                dialogRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+              } else {
+                dialogRef.current?.focus({ preventScroll: true });
+              }
               setPhase("open");
             },
             reducedMotion ? 0 : 1050,
@@ -84,9 +89,14 @@ export function MobileNavigation({
     };
   }, [phase, requestClose, visible]);
 
-  function openMenu() {
+  function openMenu(event: React.MouseEvent<HTMLButtonElement>) {
     if (visible) requestClose(true);
-    else setPhase("opening");
+    else {
+      // Pointer-triggered dialogs focus the scene without visually selecting the first link.
+      // Keyboard-triggered dialogs retain the expected visible focus on the first destination.
+      openedWithKeyboardRef.current = event.detail === 0;
+      setPhase("opening");
+    }
   }
 
   function followInternalLink(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
@@ -120,6 +130,7 @@ export function MobileNavigation({
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
+            tabIndex={-1}
           >
             <div className="mobile-menu-rail" aria-hidden="true">
               <span>CODE / WITH / SLEEK</span>

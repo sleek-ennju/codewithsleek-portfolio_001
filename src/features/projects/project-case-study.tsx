@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ProjectCaseStudyData } from "@/features/projects/queries";
 import { ProjectSectionRenderer } from "@/features/projects/project-section-renderer";
 import { CaseStudyMotion } from "@/features/projects/case-study-motion";
+import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 
 const narrativeFields = [
   ["Problem", "problem"],
@@ -46,17 +47,20 @@ export function ProjectCaseStudy({
         <div className="case-study-links">
           {project.liveUrl && (
             <Link className="button button-dark" href={project.liveUrl} target="_blank">
-              View live site ↗
+              <span>View live site</span>
+              <DiagonalArrow />
             </Link>
           )}
           {project.demoUrl && (
             <Link className="button button-light" href={project.demoUrl} target="_blank">
-              Open demo ↗
+              <span>Open demo</span>
+              <DiagonalArrow />
             </Link>
           )}
           {project.repositoryVisible && project.repositoryUrl && (
             <Link className="button button-light" href={project.repositoryUrl} target="_blank">
-              View repository ↗
+              <span>View repository</span>
+              <DiagonalArrow />
             </Link>
           )}
         </div>

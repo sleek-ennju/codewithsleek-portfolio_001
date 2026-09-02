@@ -834,6 +834,10 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.process-grid li:last-child {
+  border-bottom: 0;
+}
+
 .process-grid li > div:first-child {
   display: flex;
   align-items: baseline;
@@ -1313,6 +1317,21 @@ a {
   animation: contact-toast-enter 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.contact-toast-error {
+  border-color: #f0caca;
+  color: #7f1d1d;
+}
+.contact-toast-error .contact-toast-icon {
+  background: #feecec;
+  color: #9b1c1c;
+}
+.contact-toast-error .contact-toast-copy p {
+  color: #805151;
+}
+.contact-toast-error .contact-toast-progress {
+  background: #d64545;
+}
+
 .contact-toast-leaving {
   animation: contact-toast-exit 350ms cubic-bezier(0.4, 0, 1, 1) both;
 }
@@ -1371,11 +1390,11 @@ a {
 @keyframes contact-toast-enter {
   from {
     opacity: 0;
-    transform: translate3d(115%, -0.75rem, 0) rotate(1.5deg) scale(0.96);
+    transform: translate3d(0, -1rem, 0) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -1386,7 +1405,7 @@ a {
   }
   to {
     opacity: 0;
-    transform: translate3d(115%, -0.5rem, 0) scale(0.97);
+    transform: translate3d(0, -0.75rem, 0) scale(0.98);
   }
 }
 
@@ -1708,6 +1727,12 @@ a {
 }
 .about-copy > p:not(.section-kicker) {
   max-width: 40rem;
+}
+.about-copy h2 + p {
+  margin-top: clamp(1.35rem, 2.5vw, 2rem);
+}
+.about-copy p + p {
+  margin-top: 0.75rem;
 }
 
 .contact-section {
@@ -2100,6 +2125,9 @@ a {
     color: white;
     pointer-events: none;
     perspective: 1400px;
+  }
+  .mobile-menu-scene:focus {
+    outline: none;
   }
   .mobile-menu-scene.is-open {
     visibility: visible;
@@ -2827,6 +2855,9 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
+}
+.case-study-links .button {
+  gap: 0.65rem;
 }
 .case-study-tags {
   margin-top: 2rem;
@@ -6517,5 +6548,104 @@ body:has(.resume-page) .resume-download-float {
 
   .admin-activity-list li strong {
     display: none;
+  }
+}
+
+/*
+ * Touch browsers can keep CSS :hover active after a tap. Restore every public
+ * interactive surface to its resting state on devices without true hover input;
+ * :focus-visible remains available for keyboard and switch-control users.
+ */
+@media (hover: none), (pointer: coarse) {
+  .nav-links a:hover,
+  .text-link:hover {
+    text-decoration: none;
+  }
+
+  .button:hover,
+  .nav-cta.liquid-button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .liquid-button:hover::before {
+    opacity: 0;
+    transform: rotate(-18deg) scale(0.55);
+  }
+
+  .liquid-button:hover::after {
+    opacity: 0;
+    transform: rotate(22deg) scale(0.45);
+  }
+
+  .button-light.liquid-button:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .project-card:hover .project-art .project-visual-slide[data-active="true"],
+  .projects-public-grid a:hover .projects-card-image img {
+    transform: scale(1);
+  }
+
+  .project-gallery-controls button:hover {
+    background: transparent;
+  }
+
+  .project-art-link:hover i {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  .project-card a:hover .project-card-cta i,
+  .projects-back-link:hover {
+    transform: none;
+  }
+
+  .technology-grid li:hover {
+    background: #111214;
+    color: inherit;
+  }
+
+  .mobile-menu-panel nav a:hover i {
+    background: transparent;
+    color: inherit;
+    transform: none;
+  }
+
+  .projects-archive-card-link:hover .projects-card-cta {
+    border-color: #d5d9e0;
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .projects-archive-card-link:hover .projects-card-cta i {
+    background: var(--ink);
+    color: white;
+  }
+
+  .testimonial-arrows button:hover {
+    background: transparent;
+    color: var(--ink);
+    transform: none;
+  }
+
+  .footer-invitation > a:hover i {
+    background: transparent;
+    transform: none;
+  }
+
+  .footer-socials a:hover {
+    border-color: rgb(255 255 255 / 0.16);
+    background: transparent;
+    color: #c1c3c8;
+  }
+
+  .resume-download-float:hover {
+    background: rgba(12, 15, 22, 0.86);
+    box-shadow:
+      0 0.9rem 2.4rem rgba(8, 17, 35, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    transform: none;
   }
 }
