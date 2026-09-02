@@ -7,7 +7,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await getDb().project.findMany({
     where: { status: "PUBLISHED" },
     orderBy: { updatedAt: "desc" },
-    select: { slug: true, updatedAt: true, cardImage: { select: { secureUrl: true } }, coverImage: { select: { secureUrl: true } } },
+    select: {
+      slug: true,
+      updatedAt: true,
+      cardImage: { select: { secureUrl: true } },
+      coverImage: { select: { secureUrl: true } },
+    },
   });
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -24,11 +29,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: project.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.8,
-      images: [...new Set(
-        [project.coverImage?.secureUrl, project.cardImage?.secureUrl].filter(
-          (url): url is string => Boolean(url),
+      images: [
+        ...new Set(
+          [project.coverImage?.secureUrl, project.cardImage?.secureUrl].filter(
+            (url): url is string => Boolean(url),
+          ),
         ),
-      )],
+      ],
     })),
   ];
 }

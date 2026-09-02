@@ -24,7 +24,10 @@ test("protected media API rejects anonymous requests", async ({ request }) => {
 });
 
 test("administrator can reach the content-management workspace", async ({ page }) => {
-  test.skip(!process.env.E2E_ADMIN_EMAIL || !process.env.E2E_ADMIN_PASSWORD, "Dedicated E2E admin credentials were not supplied.");
+  test.skip(
+    !process.env.E2E_ADMIN_EMAIL || !process.env.E2E_ADMIN_PASSWORD,
+    "Dedicated E2E admin credentials were not supplied.",
+  );
 
   await page.goto("/admin/login");
   await page.getByLabel("Email").fill(process.env.E2E_ADMIN_EMAIL!);

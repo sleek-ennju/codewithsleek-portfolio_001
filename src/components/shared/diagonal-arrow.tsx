@@ -7,7 +7,13 @@ export function DiagonalArrow({ className = "" }: { className?: string }) {
       focusable="false"
       viewBox="0 0 24 24"
     >
-      <path d="M5 19 19 5M9 5h10v10" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      <path
+        d="M5 19 19 5M9 5h10v10"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
     </svg>
   );
 }

@@ -38,11 +38,16 @@ test("project archive leads to a complete published case study", async ({ page }
   await expect(page).toHaveURL(/\/projects\/[a-z0-9-]+$/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByRole("link", { name: /all projects/i })).toBeVisible();
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\//);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /^https?:\/\//,
+  );
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
 });
 
-test("crawler endpoints expose public content and exclude private surfaces", async ({ request }) => {
+test("crawler endpoints expose public content and exclude private surfaces", async ({
+  request,
+}) => {
   const [robotsResponse, sitemapResponse] = await Promise.all([
     request.get("/robots.txt"),
     request.get("/sitemap.xml"),

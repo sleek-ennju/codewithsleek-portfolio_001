@@ -14,13 +14,20 @@ function valuesFrom(formData: FormData) {
   };
 }
 
-export async function submitContactForm(_state: ContactFormState, formData: FormData): Promise<ContactFormState> {
+export async function submitContactForm(
+  _state: ContactFormState,
+  formData: FormData,
+): Promise<ContactFormState> {
   const values = valuesFrom(formData);
 
   // Bots tend to fill fields hidden from people. Return the same success state
   // so the trap does not reveal itself.
   if (String(formData.get("companyWebsite") ?? "")) {
-    return { status: "success", message: "Thanks—your message has been received.", submissionId: crypto.randomUUID() };
+    return {
+      status: "success",
+      message: "Thanks—your message has been received.",
+      submissionId: crypto.randomUUID(),
+    };
   }
 
   const parsed = contactFormSchema.safeParse(values);

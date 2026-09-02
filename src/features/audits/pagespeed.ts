@@ -26,15 +26,24 @@ function metric(audit: LighthouseAudit | undefined) {
 
 export function parsePageSpeedResult(payload: PageSpeedResponse) {
   const result = payload.lighthouseResult;
-  if (!result) throw new Error(payload.error?.message ?? "PageSpeed returned no Lighthouse result.");
+  if (!result)
+    throw new Error(payload.error?.message ?? "PageSpeed returned no Lighthouse result.");
   if (result.runtimeError?.message) throw new Error(result.runtimeError.message);
 
   const categories = result.categories ?? {};
   const audits = result.audits ?? {};
   const auditedAt = result.fetchTime ? new Date(result.fetchTime) : new Date();
-  if (Number.isNaN(auditedAt.getTime())) throw new Error("PageSpeed returned an invalid audit date.");
+  if (Number.isNaN(auditedAt.getTime()))
+    throw new Error("PageSpeed returned an invalid audit date.");
 
-  const selectedAuditIds = ["largest-contentful-paint", "cumulative-layout-shift", "first-contentful-paint", "speed-index", "total-blocking-time", "interaction-to-next-paint"] as const;
+  const selectedAuditIds = [
+    "largest-contentful-paint",
+    "cumulative-layout-shift",
+    "first-contentful-paint",
+    "speed-index",
+    "total-blocking-time",
+    "interaction-to-next-paint",
+  ] as const;
   const selectedAudits = Object.fromEntries(selectedAuditIds.map((id) => [id, audits[id] ?? null]));
 
   return {
@@ -63,15 +72,28 @@ export function parsePageSpeedResult(payload: PageSpeedResponse) {
   };
 }
 
-export async function runPageSpeedAudit(testedUrl: string, strategy: "MOBILE" | "DESKTOP", apiKey: string) {
-  const endpoint = new URL("https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed");
+export async function runPageSpeedAudit(
+  testedUrl: string,
+  strategy: "MOBILE" | "DESKTOP",
+  apiKey: string,
+) {
+  const endpoint = new URL(
+    "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed",
+  );
   endpoint.searchParams.set("url", testedUrl);
   endpoint.searchParams.set("strategy", strategy.toLowerCase());
   endpoint.searchParams.set("key", apiKey);
-  for (const category of ["performance", "accessibility", "best-practices", "seo"]) endpoint.searchParams.append("category", category);
+  for (const category of ["performance", "accessibility", "best-practices", "seo"])
+    endpoint.searchParams.append("category", category);
 
-  const response = await fetch(endpoint, { cache: "no-store", signal: AbortSignal.timeout(120_000) });
-  const payload = await response.json() as PageSpeedResponse;
-  if (!response.ok) throw new Error(payload.error?.message ?? `PageSpeed request failed with status ${response.status}.`);
+  const response = await fetch(endpoint, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(120_000),
+  });
+  const payload = (await response.json()) as PageSpeedResponse;
+  if (!response.ok)
+    throw new Error(
+      payload.error?.message ?? `PageSpeed request failed with status ${response.status}.`,
+    );
   return parsePageSpeedResult(payload);
 }

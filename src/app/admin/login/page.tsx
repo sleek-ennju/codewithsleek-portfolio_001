@@ -20,16 +20,31 @@ export default async function AdminLoginPage() {
   return (
     <main className="admin-login-page">
       <div className="admin-login-panel">
-        <Link className="admin-login-brand" href="/" aria-label="CODEwithSleek home"><Image src="/logos/cws_logo_wordmark.png" alt="CODEwithSleek — Crafting logic the sleek way" width={1300} height={683} priority sizes="180px" /></Link>
+        <Link className="admin-login-brand" href="/" aria-label="CODEwithSleek home">
+          <Image
+            src="/logos/cws_logo_wordmark.png"
+            alt="CODEwithSleek — Crafting logic the sleek way"
+            width={1300}
+            height={683}
+            priority
+            sizes="180px"
+          />
+        </Link>
         <p className="admin-eyebrow">Private administration</p>
         <h1>Welcome back.</h1>
-        <p className="admin-login-copy">Sign in to manage projects, evidence, media, and the public portfolio.</p>
+        <p className="admin-login-copy">
+          Sign in to manage projects, evidence, media, and the public portfolio.
+        </p>
         <SignInForm />
         <p className="admin-login-note">No public registration is available.</p>
       </div>
       <aside className="admin-login-aside" aria-hidden="true">
         <div className="admin-login-grid" />
-        <p>Crafting logic,<br /><strong>the sleek way.</strong></p>
+        <p>
+          Crafting logic,
+          <br />
+          <strong>the sleek way.</strong>
+        </p>
       </aside>
     </main>
   );

@@ -5,7 +5,9 @@ import { getDb } from "@/server/db";
 
 export const getSiteSettings = cache(async () => {
   try {
-    const record = await withDatabaseRetry(() => getDb().siteSetting.findUnique({ where: { key: "site" }, select: { value: true } }));
+    const record = await withDatabaseRetry(() =>
+      getDb().siteSetting.findUnique({ where: { key: "site" }, select: { value: true } }),
+    );
     const parsed = siteSettingsSchema.safeParse(record?.value);
     return parsed.success ? parsed.data : defaultSiteSettings;
   } catch (error) {

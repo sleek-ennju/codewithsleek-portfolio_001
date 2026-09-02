@@ -3,14 +3,28 @@ import { expect, test } from "@playwright/test";
 
 test.describe.configure({ mode: "serial", timeout: 60_000 });
 
-const publicRoutes = ["/", "/projects", "/projects/routepilot-logistics-control-center", "/admin/login"];
+const publicRoutes = [
+  "/",
+  "/projects",
+  "/projects/routepilot-logistics-control-center",
+  "/admin/login",
+];
 
 for (const route of publicRoutes) {
   test(`${route} has no serious or critical accessibility violations`, async ({ page }) => {
     await page.goto(route);
-    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
-    const blockingViolations = results.violations.filter((violation) => violation.impact === "serious" || violation.impact === "critical");
-    expect(blockingViolations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => node.target) }))).toEqual([]);
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    const blockingViolations = results.violations.filter(
+      (violation) => violation.impact === "serious" || violation.impact === "critical",
+    );
+    expect(
+      blockingViolations.map((violation) => ({
+        id: violation.id,
+        nodes: violation.nodes.map((node) => node.target),
+      })),
+    ).toEqual([]);
   });
 }
 
@@ -45,10 +59,16 @@ test("reduced-motion preference disables animated transitions", async ({ page })
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
 
-  const motion = await page.locator(".hero-glow").first().evaluate((element) => {
-    const style = getComputedStyle(element);
-    return { animationDuration: style.animationDuration, transitionDuration: style.transitionDuration };
-  });
+  const motion = await page
+    .locator(".hero-glow")
+    .first()
+    .evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        animationDuration: style.animationDuration,
+        transitionDuration: style.transitionDuration,
+      };
+    });
   expect(parseFloat(motion.animationDuration)).toBeLessThanOrEqual(0.01);
   expect(parseFloat(motion.transitionDuration)).toBeLessThanOrEqual(0.01);
 });
@@ -62,7 +82,16 @@ test("mobile navigation remains operable and accessible", async ({ page }) => {
   await menu.click();
   await expect(page.getByRole("navigation", { name: "Mobile navigation" })).toBeVisible();
 
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
-  const blockingViolations = results.violations.filter((violation) => violation.impact === "serious" || violation.impact === "critical");
-  expect(blockingViolations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => node.target) }))).toEqual([]);
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+  const blockingViolations = results.violations.filter(
+    (violation) => violation.impact === "serious" || violation.impact === "critical",
+  );
+  expect(
+    blockingViolations.map((violation) => ({
+      id: violation.id,
+      nodes: violation.nodes.map((node) => node.target),
+    })),
+  ).toEqual([]);
 });

@@ -2,7 +2,18 @@ import { getDb } from "@/server/db";
 
 export async function getDashboardOverview() {
   const db = getDb();
-  const [projects, drafts, published, archived, featured, media, audits, testimonials, unreadContacts, recentActivity] = await Promise.all([
+  const [
+    projects,
+    drafts,
+    published,
+    archived,
+    featured,
+    media,
+    audits,
+    testimonials,
+    unreadContacts,
+    recentActivity,
+  ] = await Promise.all([
     db.project.count(),
     db.project.count({ where: { status: "DRAFT" } }),
     db.project.count({ where: { status: "PUBLISHED" } }),
@@ -19,5 +30,16 @@ export async function getDashboardOverview() {
     }),
   ]);
 
-  return { projects, drafts, published, archived, featured, media, audits, testimonials, unreadContacts, recentActivity };
+  return {
+    projects,
+    drafts,
+    published,
+    archived,
+    featured,
+    media,
+    audits,
+    testimonials,
+    unreadContacts,
+    recentActivity,
+  };
 }

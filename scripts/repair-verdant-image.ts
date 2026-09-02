@@ -10,7 +10,12 @@ import { PrismaClient } from "../src/generated/prisma/client";
 config({ path: ".env.local" });
 config();
 
-for (const name of ["DATABASE_URL", "CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET"] as const) {
+for (const name of [
+  "DATABASE_URL",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
+] as const) {
   if (!process.env[name]) throw new Error(`${name} is required.`);
 }
 
@@ -21,7 +26,9 @@ cloudinary.config({
   secure: true,
 });
 
-const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+});
 const slug = "verdant-sustainable-commerce";
 
 function uploadImage(buffer: Buffer) {
@@ -44,10 +51,19 @@ function uploadImage(buffer: Buffer) {
 }
 
 try {
-  const project = await prisma.project.findUnique({ where: { slug }, select: { cardImageId: true } });
-  if (!project?.cardImageId) throw new Error("Verdant Market does not have an assigned card image.");
+  const project = await prisma.project.findUnique({
+    where: { slug },
+    select: { cardImageId: true },
+  });
+  if (!project?.cardImageId)
+    throw new Error("Verdant Market does not have an assigned card image.");
 
-  const imagePath = path.join(process.cwd(), "public", "generated-case-studies", "case-study-05.png");
+  const imagePath = path.join(
+    process.cwd(),
+    "public",
+    "generated-case-studies",
+    "case-study-05.png",
+  );
   const upload = await uploadImage(await readFile(imagePath));
 
   await prisma.mediaAsset.update({
@@ -60,7 +76,8 @@ try {
       bytes: upload.bytes,
       width: upload.width,
       height: upload.height,
-      altText: "Verdant Market sustainable commerce storefront, checkout, sales dashboard, and environmental impact reporting",
+      altText:
+        "Verdant Market sustainable commerce storefront, checkout, sales dashboard, and environmental impact reporting",
       secureUrl: upload.secure_url,
     },
   });

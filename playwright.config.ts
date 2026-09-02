@@ -15,7 +15,12 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], channel: process.env.CI ? undefined : "chrome" } }],
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"], channel: process.env.CI ? undefined : "chrome" },
+    },
+  ],
   webServer: externalBaseUrl
     ? undefined
     : {

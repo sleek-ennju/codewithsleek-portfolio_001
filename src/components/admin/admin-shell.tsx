@@ -14,24 +14,36 @@ const adminNavigation = [
   { href: "/admin/settings", label: "Settings", short: "ST" },
 ] as const;
 
-export function AdminShell({ children, adminName }: { children: React.ReactNode; adminName: string }) {
+export function AdminShell({
+  children,
+  adminName,
+}: {
+  children: React.ReactNode;
+  adminName: string;
+}) {
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <Link className="admin-brand" href="/admin/dashboard">
-          <span><Image src="/logos/cws_logo_mark.png" alt="" width={460} height={383} sizes="32px" /></span><strong>CODEwithSleek</strong>
+          <span>
+            <Image src="/logos/cws_logo_mark.png" alt="" width={460} height={383} sizes="32px" />
+          </span>
+          <strong>CODEwithSleek</strong>
         </Link>
         <nav aria-label="Administration">
           {adminNavigation.map((item) => (
             <Link href={item.href} key={item.href}>
-              <span aria-hidden="true">{item.short}</span>{item.label}
+              <span aria-hidden="true">{item.short}</span>
+              {item.label}
             </Link>
           ))}
         </nav>
         <div className="admin-sidebar-footer">
           <p>Signed in as</p>
           <strong>{adminName}</strong>
-          <form action={endAdminSession}><button type="submit">Sign out</button></form>
+          <form action={endAdminSession}>
+            <button type="submit">Sign out</button>
+          </form>
         </div>
       </aside>
       <div className="admin-workspace">
@@ -39,10 +51,16 @@ export function AdminShell({ children, adminName }: { children: React.ReactNode;
           <details className="admin-mobile-menu">
             <summary>Menu</summary>
             <nav aria-label="Mobile administration">
-              {adminNavigation.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
+              {adminNavigation.map((item) => (
+                <Link href={item.href} key={item.href}>
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </details>
-          <Link href="/" target="_blank">View live site <span aria-hidden="true">↗</span></Link>
+          <Link href="/" target="_blank">
+            View live site <span aria-hidden="true">↗</span>
+          </Link>
         </header>
         {children}
       </div>

@@ -5,5 +5,9 @@ export const dynamic = "force-dynamic";
 
 export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAdmin();
-  return <AdminShell adminName={session.user.name ?? session.user.email ?? "Administrator"}>{children}</AdminShell>;
+  return (
+    <AdminShell adminName={session.user.name ?? session.user.email ?? "Administrator"}>
+      {children}
+    </AdminShell>
+  );
 }

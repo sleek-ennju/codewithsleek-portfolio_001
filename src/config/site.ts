@@ -19,6 +19,7 @@ export const siteConfig = {
   description:
     "Premium web experiences, scalable product engineering, and evidence-backed case studies by Emmanuel Ihenacho.",
   url: parsedSiteUrl.data,
+  resumePath: "/documents/Emmanuel-Ihenacho-Resume.pdf",
   navigation: [
     { label: "Works", href: "/#works" },
     { label: "Process", href: "/#process" },

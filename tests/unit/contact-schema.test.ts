@@ -14,7 +14,11 @@ describe("contactFormSchema", () => {
   });
 
   it("rejects invalid email and thin messages", () => {
-    const result = contactFormSchema.safeParse({ name: "A", email: "not-an-email", message: "Hello" });
+    const result = contactFormSchema.safeParse({
+      name: "A",
+      email: "not-an-email",
+      message: "Hello",
+    });
 
     expect(result.success).toBe(false);
     if (!result.success) {

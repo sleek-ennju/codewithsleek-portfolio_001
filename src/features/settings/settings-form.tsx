@@ -4,7 +4,77 @@ import { updateSiteSettings } from "@/features/settings/actions";
 import type { SiteSettings } from "@/features/settings/schemas";
 
 export function SettingsForm({ settings }: { settings: SiteSettings }) {
-  const [state, action, pending] = useActionState(updateSiteSettings, {}); const active = state.values ?? settings; const error = (key: string) => state.errors?.[key]?.[0];
-  const input = (name: keyof SiteSettings, label: string, type = "text") => <label>{label}<input name={name} type={type} defaultValue={String(active[name] ?? "")} />{error(name) && <span>{error(name)}</span>}</label>;
-  return <form action={action} className="admin-form-grid admin-settings-form" key={state.submissionId ?? "settings"}>{state.message && <p className={state.errors ? "admin-form-error admin-form-wide" : "admin-form-success admin-form-wide"}>{state.message}</p>}<fieldset className="admin-form-wide admin-case-study-fields"><legend>Brand and homepage</legend><div className="admin-form-grid">{input("brandName", "Brand name")}{input("tagline", "Tagline")} {input("heroTitle", "Hero title")}{input("heroAccent", "Hero accent")}<label className="admin-form-wide">Hero description<textarea name="heroDescription" defaultValue={active.heroDescription} rows={4} />{error("heroDescription") && <span>{error("heroDescription")}</span>}</label></div></fieldset><fieldset className="admin-form-wide admin-case-study-fields"><legend>Contact and links</legend><div className="admin-form-grid">{input("contactHeading", "Contact heading")} {input("contactEmail", "Contact email", "email")}<label className="admin-form-wide">Contact description<textarea name="contactDescription" defaultValue={active.contactDescription} rows={4} /></label>{input("responseTime", "Response time")}{input("bookingUrl", "Booking URL", "url")}{input("resumeUrl", "Résumé URL", "url")}{input("githubUrl", "GitHub URL", "url")}{input("linkedinUrl", "LinkedIn URL", "url")}{input("xUrl", "X URL", "url")}</div></fieldset><fieldset className="admin-form-wide admin-case-study-fields"><legend>Default SEO</legend><div className="admin-form-grid">{input("seoTitle", "SEO title")}<label>SEO description<textarea name="seoDescription" defaultValue={active.seoDescription} rows={3} />{error("seoDescription") && <span>{error("seoDescription")}</span>}</label></div></fieldset><div className="admin-form-actions admin-form-wide"><button className="admin-primary-button" disabled={pending}>{pending ? "Saving..." : "Save site settings"}</button></div></form>;
+  const [state, action, pending] = useActionState(updateSiteSettings, {});
+  const active = state.values ?? settings;
+  const error = (key: string) => state.errors?.[key]?.[0];
+  const input = (name: keyof SiteSettings, label: string, type = "text") => (
+    <label>
+      {label}
+      <input name={name} type={type} defaultValue={String(active[name] ?? "")} />
+      {error(name) && <span>{error(name)}</span>}
+    </label>
+  );
+  return (
+    <form
+      action={action}
+      className="admin-form-grid admin-settings-form"
+      key={state.submissionId ?? "settings"}
+    >
+      {state.message && (
+        <p
+          className={
+            state.errors ? "admin-form-error admin-form-wide" : "admin-form-success admin-form-wide"
+          }
+        >
+          {state.message}
+        </p>
+      )}
+      <fieldset className="admin-form-wide admin-case-study-fields">
+        <legend>Brand and homepage</legend>
+        <div className="admin-form-grid">
+          {input("brandName", "Brand name")}
+          {input("tagline", "Tagline")} {input("heroTitle", "Hero title")}
+          {input("heroAccent", "Hero accent")}
+          <label className="admin-form-wide">
+            Hero description
+            <textarea name="heroDescription" defaultValue={active.heroDescription} rows={4} />
+            {error("heroDescription") && <span>{error("heroDescription")}</span>}
+          </label>
+        </div>
+      </fieldset>
+      <fieldset className="admin-form-wide admin-case-study-fields">
+        <legend>Contact and links</legend>
+        <div className="admin-form-grid">
+          {input("contactHeading", "Contact heading")}{" "}
+          {input("contactEmail", "Contact email", "email")}
+          <label className="admin-form-wide">
+            Contact description
+            <textarea name="contactDescription" defaultValue={active.contactDescription} rows={4} />
+          </label>
+          {input("responseTime", "Response time")}
+          {input("bookingUrl", "Booking URL", "url")}
+          {input("resumeUrl", "Résumé URL", "url")}
+          {input("githubUrl", "GitHub URL", "url")}
+          {input("linkedinUrl", "LinkedIn URL", "url")}
+          {input("xUrl", "X URL", "url")}
+        </div>
+      </fieldset>
+      <fieldset className="admin-form-wide admin-case-study-fields">
+        <legend>Default SEO</legend>
+        <div className="admin-form-grid">
+          {input("seoTitle", "SEO title")}
+          <label>
+            SEO description
+            <textarea name="seoDescription" defaultValue={active.seoDescription} rows={3} />
+            {error("seoDescription") && <span>{error("seoDescription")}</span>}
+          </label>
+        </div>
+      </fieldset>
+      <div className="admin-form-actions admin-form-wide">
+        <button className="admin-primary-button" disabled={pending}>
+          {pending ? "Saving..." : "Save site settings"}
+        </button>
+      </div>
+    </form>
+  );
 }

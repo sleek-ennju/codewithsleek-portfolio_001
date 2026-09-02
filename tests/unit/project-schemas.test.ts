@@ -32,6 +32,9 @@ const validProject = {
   cardImageId: "",
   coverImageId: "",
   socialImageId: "",
+  storyOverviewImageId: "",
+  storyFeatureImageId: "",
+  storyDetailImageId: "",
   galleryImageIds: [],
 };
 
@@ -41,7 +44,11 @@ describe("projectFormSchema", () => {
   });
 
   it("requires a repository URL before public visibility", () => {
-    const result = projectFormSchema.safeParse({ ...validProject, repositoryUrl: "", repositoryVisible: true });
+    const result = projectFormSchema.safeParse({
+      ...validProject,
+      repositoryUrl: "",
+      repositoryVisible: true,
+    });
     expect(result.success).toBe(false);
   });
 
@@ -56,24 +63,42 @@ describe("projectFormSchema", () => {
   });
 
   it("requires structured metric lines", () => {
-    const result = projectFormSchema.safeParse({ ...validProject, metrics: "Performance score only" });
+    const result = projectFormSchema.safeParse({
+      ...validProject,
+      metrics: "Performance score only",
+    });
     expect(result.success).toBe(false);
   });
 });
 
 describe("projectSectionFormSchema", () => {
   it("accepts a rich text content block", () => {
-    const result = projectSectionFormSchema.safeParse({ type: "RICH_TEXT", title: "The approach", primary: "A focused delivery narrative.", secondary: "" });
+    const result = projectSectionFormSchema.safeParse({
+      type: "RICH_TEXT",
+      title: "The approach",
+      primary: "A focused delivery narrative.",
+      secondary: "",
+    });
     expect(result.success).toBe(true);
   });
 
   it("requires content for both columns", () => {
-    const result = projectSectionFormSchema.safeParse({ type: "TWO_COLUMN", title: "Comparison", primary: "Before", secondary: "" });
+    const result = projectSectionFormSchema.safeParse({
+      type: "TWO_COLUMN",
+      title: "Comparison",
+      primary: "Before",
+      secondary: "",
+    });
     expect(result.success).toBe(false);
   });
 
   it("requires structured metric rows", () => {
-    const result = projectSectionFormSchema.safeParse({ type: "METRICS_GRID", title: "Results", primary: "Performance score only", secondary: "" });
+    const result = projectSectionFormSchema.safeParse({
+      type: "METRICS_GRID",
+      title: "Results",
+      primary: "Performance score only",
+      secondary: "",
+    });
     expect(result.success).toBe(false);
   });
 });

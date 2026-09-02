@@ -32,11 +32,21 @@ export function CursorCompanion() {
       pointerX = event.clientX;
       pointerY = event.clientY;
       dot.dataset.visible = "true";
-      dot.dataset.interactive = event.target instanceof Element && Boolean(event.target.closest("a, button, [role='button']")) ? "true" : "false";
+      dot.dataset.interactive =
+        event.target instanceof Element &&
+        Boolean(event.target.closest("a, button, [role='button']"))
+          ? "true"
+          : "false";
     };
-    const handleLeave = () => { dot.dataset.visible = "false"; };
-    const handleDown = () => { dot.dataset.pressed = "true"; };
-    const handleUp = () => { dot.dataset.pressed = "false"; };
+    const handleLeave = () => {
+      dot.dataset.visible = "false";
+    };
+    const handleDown = () => {
+      dot.dataset.pressed = "true";
+    };
+    const handleUp = () => {
+      dot.dataset.pressed = "false";
+    };
 
     window.addEventListener("pointermove", handleMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", handleLeave);

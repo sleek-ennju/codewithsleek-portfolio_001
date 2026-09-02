@@ -1,0 +1,12 @@
+.next/
+.pnpm-store/
+node_modules/
+coverage/
+output/
+public/
+src/generated/
+tmp/
+pnpm-lock.yaml
+*.md
+*.pdf
+*.docx
