@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useActionState, useState } from "react";
+import { ActionNotification } from "@/components/admin/action-notification";
 
 import type { ProjectFormState } from "@/features/projects/schemas";
 
@@ -232,9 +233,12 @@ export function ProjectForm({
   return (
     <form action={formAction} className="admin-project-form" key={state.submissionId ?? "initial"}>
       {state.message && (
-        <p className="admin-form-error" aria-live="polite">
-          {state.message}
-        </p>
+        <ActionNotification
+          key={state.submissionId ?? state.message}
+          message={state.message}
+          title="Project not saved"
+          tone="error"
+        />
       )}
       <div className="admin-form-grid">
         <label>
@@ -474,7 +478,11 @@ export function ProjectForm({
         </label>
       </div>
       <div className="admin-form-actions">
-        <button className="admin-primary-button" disabled={pending} type="submit">
+        <button
+          className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+          disabled={pending}
+          type="submit"
+        >
           {pending ? "Saving…" : "Save project"}
         </button>
       </div>

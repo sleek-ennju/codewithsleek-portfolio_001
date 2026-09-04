@@ -19,6 +19,7 @@ type Asset = {
 export function MediaManager({ assets, configured }: { assets: Asset[]; configured: boolean }) {
   const router = useRouter();
   const [feedback, setFeedback] = useState<{
+    id: number;
     kind: "success" | "error";
     title: string;
     text: string;
@@ -36,12 +37,14 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
       const result = await response.json().catch(() => ({}));
       if (!response.ok)
         return setFeedback({
+          id: Date.now(),
           kind: "error",
           title: "Upload failed",
           text: result.error ?? "Upload failed.",
         });
       uploadFormRef.current?.reset();
       setFeedback({
+        id: Date.now(),
         kind: "success",
         title: "Upload complete",
         text: "The image is ready in your media library.",
@@ -49,6 +52,7 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
       router.refresh();
     } catch {
       setFeedback({
+        id: Date.now(),
         kind: "error",
         title: "Upload failed",
         text: "The upload could not be completed. Check your connection and try again.",
@@ -66,6 +70,7 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
         return setFeedback({
+          id: Date.now(),
           kind: "error",
           title: "Deletion failed",
           text: result.error ?? "Deletion failed.",
@@ -73,6 +78,7 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
       }
       setConfirmDeleteId(null);
       setFeedback({
+        id: Date.now(),
         kind: "success",
         title: "Media deleted",
         text: "The media asset has been deleted.",
@@ -80,6 +86,7 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
       router.refresh();
     } catch {
       setFeedback({
+        id: Date.now(),
         kind: "error",
         title: "Deletion failed",
         text: "The media asset could not be deleted. Check your connection and try again.",
@@ -117,19 +124,24 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
               disabled={uploadPending}
             >
               <span>
-                {uploadPending && <i aria-hidden="true" />}
                 <span aria-live="polite">
                   {uploadPending ? "Uploading image…" : "Upload image"}
                 </span>
               </span>
             </button>
+            {uploadPending && (
+              <div className="admin-upload-progress" role="status" aria-live="polite">
+                <span>Uploading and processing your image</span>
+                <i aria-hidden="true" />
+              </div>
+            )}
           </form>
         ) : (
           <p className="admin-form-error">Add the Cloudinary credentials to enable uploads.</p>
         )}
         {feedback && (
           <ActionNotification
-            key={`${feedback.kind}-${feedback.title}-${feedback.text}`}
+            key={feedback.id}
             message={feedback.text}
             title={feedback.title}
             tone={feedback.kind}
@@ -199,7 +211,7 @@ export function MediaManager({ assets, configured }: { assets: Asset[]; configur
                 Cancel
               </button>
               <button
-                className="admin-danger-button"
+                className={`admin-danger-button${deletePending ? " admin-button-loading" : ""}`}
                 disabled={deletePending}
                 onClick={() => remove(confirmDeleteId)}
                 type="button"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { ActionNotification } from "@/components/admin/action-notification";
 import {
   createTestimonial,
   deleteTestimonial,
@@ -141,19 +142,19 @@ function Card({
         <summary>Edit testimonial</summary>
         <form action={action} className="admin-form-grid" key={state.submissionId ?? item.id}>
           {state.message && (
-            <p
-              className={
-                state.errors
-                  ? "admin-form-error admin-form-wide"
-                  : "admin-form-success admin-form-wide"
-              }
-            >
-              {state.message}
-            </p>
+            <ActionNotification
+              key={state.submissionId ?? state.message}
+              message={state.message}
+              title={state.errors ? "Testimonial not saved" : "Testimonial saved"}
+              tone={state.errors ? "error" : "success"}
+            />
           )}
           <Fields item={item} state={state} projects={projects} photos={photos} />
           <div className="admin-form-actions admin-form-wide">
-            <button className="admin-primary-button" disabled={pending}>
+            <button
+              className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+              disabled={pending}
+            >
               {pending ? "Saving..." : "Save testimonial"}
             </button>
           </div>
@@ -163,9 +164,19 @@ function Card({
         <summary>Remove testimonial</summary>
         <p>This permanently removes this social-proof record.</p>
         <form action={deleteAction}>
-          {deleteState.message && <p className="admin-form-error">{deleteState.message}</p>}
-          <button className="admin-danger-button" disabled={deleting}>
-            Confirm removal
+          {deleteState.message && (
+            <ActionNotification
+              key={deleteState.submissionId ?? deleteState.message}
+              message={deleteState.message}
+              title="Testimonial not removed"
+              tone="error"
+            />
+          )}
+          <button
+            className={`admin-danger-button${deleting ? " admin-button-loading" : ""}`}
+            disabled={deleting}
+          >
+            {deleting ? "Removing..." : "Confirm removal"}
           </button>
         </form>
       </details>
@@ -199,19 +210,19 @@ export function TestimonialManager({
           key={state.submissionId ?? "new"}
         >
           {state.message && (
-            <p
-              className={
-                state.errors
-                  ? "admin-form-error admin-form-wide"
-                  : "admin-form-success admin-form-wide"
-              }
-            >
-              {state.message}
-            </p>
+            <ActionNotification
+              key={state.submissionId ?? state.message}
+              message={state.message}
+              title={state.errors ? "Testimonial not added" : "Testimonial added"}
+              tone={state.errors ? "error" : "success"}
+            />
           )}
           <Fields state={state} projects={projects} photos={photos} />
           <div className="admin-form-actions admin-form-wide">
-            <button className="admin-primary-button" disabled={pending}>
+            <button
+              className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+              disabled={pending}
+            >
               {pending ? "Adding..." : "Add testimonial"}
             </button>
           </div>

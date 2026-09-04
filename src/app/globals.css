@@ -4785,19 +4785,52 @@ body:has(.resume-page) .resume-download-float {
   opacity: 0.65;
 }
 
-.admin-button-loading > span {
+.admin-button-loading {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
 }
-.admin-button-loading i {
+.admin-button-loading::before {
+  content: "";
+  flex: 0 0 auto;
   width: 1rem;
   height: 1rem;
   border: 2px solid rgb(255 255 255 / 0.35);
   border-top-color: white;
   border-radius: 50%;
   animation: admin-button-spin 700ms linear infinite;
+}
+.admin-upload-progress {
+  display: grid;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.admin-upload-progress > i {
+  position: relative;
+  overflow: hidden;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: rgb(27 96 217 / 0.12);
+}
+.admin-upload-progress > i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  border-radius: inherit;
+  background: var(--accent);
+  animation: admin-upload-progress 1.1s ease-in-out infinite;
+}
+@keyframes admin-upload-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(345%);
+  }
 }
 @keyframes admin-button-spin {
   to {

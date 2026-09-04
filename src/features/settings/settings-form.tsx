@@ -1,5 +1,6 @@
 "use client";
 import { useActionState } from "react";
+import { ActionNotification } from "@/components/admin/action-notification";
 import { updateSiteSettings } from "@/features/settings/actions";
 import type { SiteSettings } from "@/features/settings/schemas";
 
@@ -21,13 +22,12 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       key={state.submissionId ?? "settings"}
     >
       {state.message && (
-        <p
-          className={
-            state.errors ? "admin-form-error admin-form-wide" : "admin-form-success admin-form-wide"
-          }
-        >
-          {state.message}
-        </p>
+        <ActionNotification
+          key={state.submissionId ?? state.message}
+          message={state.message}
+          title={state.errors ? "Settings not saved" : "Settings saved"}
+          tone={state.errors ? "error" : "success"}
+        />
       )}
       <fieldset className="admin-form-wide admin-case-study-fields">
         <legend>Brand and homepage</legend>
@@ -71,7 +71,10 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
         </div>
       </fieldset>
       <div className="admin-form-actions admin-form-wide">
-        <button className="admin-primary-button" disabled={pending}>
+        <button
+          className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+          disabled={pending}
+        >
           {pending ? "Saving..." : "Save site settings"}
         </button>
       </div>

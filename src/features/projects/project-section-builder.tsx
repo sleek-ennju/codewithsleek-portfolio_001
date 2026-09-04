@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { ActionNotification } from "@/components/admin/action-notification";
 import {
   createProjectSection,
   deleteProjectSection,
@@ -131,20 +132,19 @@ function ExistingSection({
             key={state.submissionId ?? section.id}
           >
             {state.message && (
-              <p
-                className={
-                  state.errors
-                    ? "admin-form-error admin-form-wide"
-                    : "admin-form-success admin-form-wide"
-                }
-                aria-live="polite"
-              >
-                {state.message}
-              </p>
+              <ActionNotification
+                key={state.submissionId ?? state.message}
+                message={state.message}
+                title={state.errors ? "Section not saved" : "Section saved"}
+                tone={state.errors ? "error" : "success"}
+              />
             )}
             <Fields initial={readValues(section)} state={state} />
             <div className="admin-form-actions admin-form-wide">
-              <button className="admin-primary-button" disabled={pending}>
+              <button
+                className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+                disabled={pending}
+              >
                 {pending ? "Saving..." : "Save section"}
               </button>
             </div>
@@ -216,20 +216,19 @@ export function ProjectSectionBuilder({
           key={state.submissionId ?? "new-section"}
         >
           {state.message && (
-            <p
-              className={
-                state.errors
-                  ? "admin-form-error admin-form-wide"
-                  : "admin-form-success admin-form-wide"
-              }
-              aria-live="polite"
-            >
-              {state.message}
-            </p>
+            <ActionNotification
+              key={state.submissionId ?? state.message}
+              message={state.message}
+              title={state.errors ? "Section not added" : "Section added"}
+              tone={state.errors ? "error" : "success"}
+            />
           )}
           <Fields initial={readValues()} state={state} />
           <div className="admin-form-actions admin-form-wide">
-            <button className="admin-primary-button" disabled={pending}>
+            <button
+              className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+              disabled={pending}
+            >
               {pending ? "Adding..." : "Add section"}
             </button>
           </div>

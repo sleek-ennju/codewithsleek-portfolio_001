@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { ActionNotification } from "@/components/admin/action-notification";
 
 import { createPerformanceAudit } from "./actions";
 import type { AuditFormState } from "./schemas";
@@ -74,18 +75,17 @@ export function AuditRunner({
           )}
         </label>
         {state.message ? (
-          <p
-            className={`admin-feedback ${state.status === "success" ? "admin-feedback-success" : "admin-feedback-error"}`}
-            aria-live="polite"
-            role={state.status === "error" ? "alert" : "status"}
-          >
-            {state.message}
-          </p>
+          <ActionNotification
+            key={state.submissionId ?? state.message}
+            message={state.message}
+            title={state.status === "success" ? "Audit complete" : "Audit failed"}
+            tone={state.status === "success" ? "success" : "error"}
+          />
         ) : null}
       </div>
       <div className="admin-form-actions">
         <button
-          className="admin-primary-button"
+          className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
           disabled={pending || !configured || projects.length === 0}
           type="submit"
         >

@@ -119,7 +119,10 @@ function TechnologyCard({
           )}
           <Fields technology={technology} state={editState} />
           <div className="admin-form-actions admin-form-wide">
-            <button className="admin-primary-button" disabled={editPending}>
+            <button
+              className={`admin-primary-button${editPending ? " admin-button-loading" : ""}`}
+              disabled={editPending}
+            >
               {editPending ? "Saving..." : "Save changes"}
             </button>
           </div>
@@ -143,7 +146,10 @@ function TechnologyCard({
               tone={deleteState.tone ?? "error"}
             />
           )}
-          <button className="admin-danger-button" disabled={deletePending}>
+          <button
+            className={`admin-danger-button${deletePending ? " admin-button-loading" : ""}`}
+            disabled={deletePending}
+          >
             {deletePending ? "Removing..." : "Confirm removal"}
           </button>
         </form>
@@ -180,7 +186,10 @@ export function TechnologyManager({ technologies }: { technologies: Technology[]
           </p>
         </div>
         <form action={syncAction}>
-          <button className="admin-primary-button" disabled={syncPending}>
+          <button
+            className={`admin-primary-button${syncPending ? " admin-button-loading" : ""}`}
+            disabled={syncPending}
+          >
             {syncPending ? "Synchronizing..." : "Sync complete library"}
           </button>
         </form>
@@ -216,7 +225,10 @@ export function TechnologyManager({ technologies }: { technologies: Technology[]
           )}
           <Fields state={state} />
           <div className="admin-form-actions admin-form-wide">
-            <button className="admin-primary-button" disabled={pending}>
+            <button
+              className={`admin-primary-button${pending ? " admin-button-loading" : ""}`}
+              disabled={pending}
+            >
               {pending ? "Adding..." : "Add technology"}
             </button>
           </div>
