@@ -4,7 +4,7 @@ module.exports = {
       url: [
         "https://codewithsleek-portfolio.vercel.app/",
         "https://codewithsleek-portfolio.vercel.app/projects",
-        "https://codewithsleek-portfolio.vercel.app/projects/routepilot-logistics-control-center",
+        "https://codewithsleek-portfolio.vercel.app/projects/ukraft-african-crafts-ecommerce-platform",
       ],
       numberOfRuns: 2,
       settings: {

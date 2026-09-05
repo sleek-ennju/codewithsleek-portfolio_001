@@ -2571,13 +2571,16 @@ a {
   display: inline-flex;
   align-items: center;
   margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-  color: var(--muted);
+  color: #4b5563;
   font-size: 0.82rem;
   font-weight: 700;
   text-decoration: none;
   transition:
     color 180ms ease,
     transform 180ms ease;
+}
+.projects-archive > header > .section-kicker {
+  color: #4b5563;
 }
 .projects-back-link:hover {
   color: var(--ink);
@@ -2591,7 +2594,7 @@ a {
 }
 .projects-archive > header > p:last-child {
   max-width: 42rem;
-  color: var(--muted);
+  color: #4b5563;
   font-size: 1.1rem;
   line-height: 1.65;
 }

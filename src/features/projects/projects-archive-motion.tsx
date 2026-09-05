@@ -13,8 +13,8 @@ export function ProjectsArchiveMotion() {
         .timeline({ defaults: { ease: "power3.out" } })
         .fromTo(
           ".projects-archive > header > *",
-          { autoAlpha: 0, y: 36 },
-          { autoAlpha: 1, y: 0, duration: 0.72, stagger: 0.08 },
+          { y: 36 },
+          { y: 0, duration: 0.72, stagger: 0.08 },
         )
         .fromTo(
           ".projects-public-grid article:first-child",

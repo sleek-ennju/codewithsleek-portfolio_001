@@ -6,7 +6,7 @@ test.describe.configure({ mode: "serial", timeout: 60_000 });
 const publicRoutes = [
   "/",
   "/projects",
-  "/projects/routepilot-logistics-control-center",
+  "/projects/ukraft-african-crafts-ecommerce-platform",
   "/admin/login",
 ];
 

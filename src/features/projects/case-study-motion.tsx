@@ -25,9 +25,8 @@ export function CaseStudyMotion() {
       window.addEventListener("resize", sizeChapters);
       gsap.fromTo(
         ".case-study-intro > *",
-        { autoAlpha: 0, y: 70 },
+        { y: 70 },
         {
-          autoAlpha: 1,
           y: 0,
           stagger: 0.12,
           ease: "none",
@@ -41,9 +40,8 @@ export function CaseStudyMotion() {
       );
       gsap.fromTo(
         ".case-study-metrics > div",
-        { autoAlpha: 0, y: 58, scale: 0.96 },
+        { y: 58, scale: 0.96 },
         {
-          autoAlpha: 1,
           y: 0,
           scale: 1,
           stagger: 0.12,
@@ -61,9 +59,8 @@ export function CaseStudyMotion() {
         if (!copy) return;
         gsap.fromTo(
           copy,
-          { autoAlpha: 0.25, y: 80 },
+          { y: 80 },
           {
-            autoAlpha: 1,
             y: 0,
             ease: "none",
             scrollTrigger: { trigger: chapter, start: "top 88%", end: "top 38%", scrub: 0.7 },
@@ -77,9 +74,8 @@ export function CaseStudyMotion() {
         .forEach((section, index) => {
           gsap.fromTo(
             section,
-            { autoAlpha: 0, y: 72, x: index % 2 ? 18 : -18 },
+            { y: 72, x: index % 2 ? 18 : -18 },
             {
-              autoAlpha: 1,
               y: 0,
               x: 0,
               ease: "none",
