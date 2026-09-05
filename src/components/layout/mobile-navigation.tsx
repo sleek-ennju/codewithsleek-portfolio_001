@@ -43,7 +43,22 @@ export function MobileNavigation({
   useEffect(() => {
     if (!visible) return;
     const previousOverflow = document.body.style.overflow;
+    const backgroundRegions = [
+      document.querySelector<HTMLElement>("#main-content"),
+      document.querySelector<HTMLElement>(".site-footer"),
+      document.querySelector<HTMLElement>(".resume-download-float"),
+    ].filter((region): region is HTMLElement => Boolean(region));
+    const previousRegionState = backgroundRegions.map((region) => ({
+      region,
+      ariaHidden: region.getAttribute("aria-hidden"),
+      inert: region.hasAttribute("inert"),
+    }));
+
     document.body.style.overflow = "hidden";
+    backgroundRegions.forEach((region) => {
+      region.setAttribute("aria-hidden", "true");
+      region.setAttribute("inert", "");
+    });
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const focusTimer =
       phase === "opening"
@@ -84,6 +99,11 @@ export function MobileNavigation({
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
+      previousRegionState.forEach(({ region, ariaHidden, inert }) => {
+        if (ariaHidden === null) region.removeAttribute("aria-hidden");
+        else region.setAttribute("aria-hidden", ariaHidden);
+        if (!inert) region.removeAttribute("inert");
+      });
       if (focusTimer) window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
     };
