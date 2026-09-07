@@ -69,7 +69,7 @@ export function CaseStudyMotion() {
       });
       gsap.utils
         .toArray<HTMLElement>(
-          ".case-study-section, .case-study-stack, .case-study-gallery figure, .case-study-testimonials figure",
+          ".case-study-section, .case-study-stack, .case-study-performance article, .case-study-gallery figure, .case-study-testimonials figure",
         )
         .forEach((section, index) => {
           gsap.fromTo(
@@ -80,6 +80,23 @@ export function CaseStudyMotion() {
               x: 0,
               ease: "none",
               scrollTrigger: { trigger: section, start: "top 92%", end: "top 62%", scrub: 0.55 },
+            },
+          );
+        });
+      gsap.utils
+        .toArray<HTMLElement>(".case-study-performance article, .case-study-testimonials figure")
+        .forEach((card) => {
+          gsap.fromTo(
+            card.querySelectorAll(
+              ".case-study-performance-meta, dl > div, :scope > p, footer, blockquote, figcaption",
+            ),
+            { y: 18 },
+            {
+              y: 0,
+              stagger: 0.065,
+              duration: 0.7,
+              ease: "power2.out",
+              scrollTrigger: { trigger: card, start: "top 88%", once: true },
             },
           );
         });

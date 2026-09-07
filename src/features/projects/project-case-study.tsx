@@ -134,6 +134,63 @@ export function ProjectCaseStudy({
           </div>
         </section>
       )}
+      {project.performanceAudits.length > 0 && (
+        <section className="case-study-performance container" aria-labelledby="project-proof-title">
+          <header>
+            <div>
+              <p className="section-kicker">Verified performance</p>
+              <h2 id="project-proof-title">Evidence from the shipped experience.</h2>
+            </div>
+          </header>
+          <div className="case-study-performance-grid">
+            {project.performanceAudits.map((audit, auditIndex) => {
+              const scores = [
+                ["Performance", audit.performanceScore],
+                ["Accessibility", audit.accessibilityScore],
+                ["Best practices", audit.bestPracticesScore],
+                ["SEO", audit.seoScore],
+              ].filter((score): score is [string, number] => score[1] !== null);
+              const labSignals = [
+                audit.lcpMs !== null ? `LCP ${(audit.lcpMs / 1000).toFixed(2)}s` : null,
+                audit.cls !== null ? `CLS ${audit.cls.toFixed(3)}` : null,
+                audit.totalBlockingTimeMs !== null
+                  ? `TBT ${Math.round(audit.totalBlockingTimeMs)}ms`
+                  : null,
+              ].filter((signal): signal is string => Boolean(signal));
+
+              return (
+                <article key={audit.id}>
+                  <div className="case-study-performance-meta">
+                    <span>{String(auditIndex + 1).padStart(2, "0")}</span>
+                    <span>{audit.strategy.toLowerCase()} audit</span>
+                    {audit.auditedAt && (
+                      <time dateTime={audit.auditedAt.toISOString()}>
+                        {audit.auditedAt.toLocaleDateString("en-NG", {
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </time>
+                    )}
+                  </div>
+                  <dl>
+                    {scores.map(([label, value]) => (
+                      <div key={label}>
+                        <dt>{value}</dt>
+                        <dd>{label}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {labSignals.length > 0 && <p>{labSignals.join(" · ")}</p>}
+                  <footer>
+                    <span>Source</span>
+                    <strong>{audit.source}</strong>
+                  </footer>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
       {project.images.length > 0 && (
         <section className="case-study-gallery container">
           <p className="section-kicker">Project gallery</p>
@@ -160,11 +217,23 @@ export function ProjectCaseStudy({
                 “{testimonial.quote}”
               </blockquote>
               <figcaption>
-                <strong>{testimonial.authorName}</strong>
-                <span>
-                  {testimonial.authorRole}
-                  {testimonial.client ? ` · ${testimonial.client.name}` : ""}
-                </span>
+                {testimonial.photo && (
+                  <Image
+                    className="case-study-testimonial-photo"
+                    src={testimonial.photo.secureUrl}
+                    alt={testimonial.photo.altText ?? testimonial.authorName}
+                    width={72}
+                    height={72}
+                    sizes="72px"
+                  />
+                )}
+                <div className="case-study-testimonial-author">
+                  <strong>{testimonial.authorName}</strong>
+                  <span>
+                    {testimonial.authorRole}
+                    {testimonial.client ? ` · ${testimonial.client.name}` : ""}
+                  </span>
+                </div>
               </figcaption>
             </figure>
           ))}

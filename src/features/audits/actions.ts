@@ -148,4 +148,5 @@ export async function setPerformanceAuditVisibility(id: string, publicVisible: b
   ]);
   revalidatePath("/admin/audits");
   revalidatePath("/");
+  revalidatePath("/projects/[slug]", "page");
 }

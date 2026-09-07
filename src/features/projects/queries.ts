@@ -17,7 +17,24 @@ const projectInclude = {
   testimonials: {
     where: { published: true },
     orderBy: { displayOrder: "asc" as const },
-    include: { client: true },
+    include: { client: true, photo: { select: { secureUrl: true, altText: true } } },
+  },
+  performanceAudits: {
+    where: { status: "SUCCEEDED" as const, publicVisible: true, auditedAt: { not: null } },
+    orderBy: { auditedAt: "desc" as const },
+    select: {
+      id: true,
+      strategy: true,
+      performanceScore: true,
+      accessibilityScore: true,
+      bestPracticesScore: true,
+      seoScore: true,
+      lcpMs: true,
+      cls: true,
+      totalBlockingTimeMs: true,
+      source: true,
+      auditedAt: true,
+    },
   },
 };
 

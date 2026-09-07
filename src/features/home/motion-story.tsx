@@ -351,6 +351,38 @@ export function MotionStory() {
           }, testimonial),
         );
 
+      const proof = document.querySelector<HTMLElement>(".proof-section");
+      if (proof)
+        contexts.push(
+          gsap.context(() => {
+            const cards = gsap.utils.toArray<HTMLElement>(".proof-audit-grid article");
+            const timeline = gsap.timeline({
+              scrollTrigger: {
+                trigger: proof,
+                start: "top 86%",
+                end: "top 28%",
+                scrub: 0.7,
+                invalidateOnRefresh: true,
+              },
+            });
+            timeline
+              .fromTo(".proof-heading", { y: 88 }, { y: 0, ease: "none" }, 0)
+              .fromTo(".proof-ledger i", { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0.18)
+              .fromTo(
+                cards,
+                { y: 92, scale: 0.975 },
+                { y: 0, scale: 1, stagger: 0.08, ease: "none" },
+                0.2,
+              )
+              .fromTo(
+                ".proof-audit-grid dl span",
+                { "--proof-meter-scale": 0 },
+                { "--proof-meter-scale": 1, stagger: 0.025, ease: "none" },
+                0.48,
+              );
+          }, proof),
+        );
+
       const about = document.querySelector<HTMLElement>(".about-section");
       if (about)
         contexts.push(
@@ -468,34 +500,11 @@ export function MotionStory() {
               );
           }, contact),
         );
-
-      for (const selector of [".proof-section"]) {
-        const section = document.querySelector<HTMLElement>(selector);
-        if (!section) continue;
-        contexts.push(
-          gsap.context(() => {
-            const content = section.querySelectorAll<HTMLElement>(
-              ":scope > .container, :scope > div",
-            );
-            gsap.fromTo(
-              content,
-              { clipPath: "inset(7% 0 0 0)", y: 28 },
-              {
-                clipPath: "inset(0% 0 0 0)",
-                y: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: { trigger: section, start: "top 82%", once: true },
-              },
-            );
-          }, section),
-        );
-      }
     });
 
     media.add("(max-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
       const elements = gsap.utils.toArray<HTMLElement>(
-        ".works-section .project-card, .process-grid li, .technology-grid li, .profile-card, .about-copy, .contact-form",
+        ".works-section .project-card, .process-grid li, .technology-grid li, .profile-card, .about-copy, .contact-form, .proof-heading, .testimonial-heading, .testimonial-deck",
       );
       elements.forEach((element) =>
         contexts.push(
@@ -514,6 +523,35 @@ export function MotionStory() {
           }, element),
         ),
       );
+    });
+
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      const proof = document.querySelector<HTMLElement>(".proof-section");
+      if (proof) {
+        gsap.fromTo(
+          proof,
+          { "--proof-word-shift": "7%" },
+          {
+            "--proof-word-shift": "-7%",
+            ease: "none",
+            scrollTrigger: { trigger: proof, start: "top bottom", end: "bottom top", scrub: 0.7 },
+          },
+        );
+      }
+      // Small child reveals keep the measured values readable throughout the entrance.
+      gsap.utils.toArray<HTMLElement>(".proof-audit-grid article").forEach((card) => {
+        gsap.fromTo(
+          card.querySelectorAll(".proof-audit-meta, h3, dl > div, :scope > p"),
+          { y: 18 },
+          {
+            y: 0,
+            stagger: 0.055,
+            duration: 0.65,
+            ease: "power2.out",
+            scrollTrigger: { trigger: card, start: "top 88%", once: true },
+          },
+        );
+      });
     });
 
     media.add("(prefers-reduced-motion: reduce)", () => {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 import { processSteps } from "./content";
@@ -337,58 +338,76 @@ export function HomePage({
 
       {performanceAudits.length > 0 ? (
         <section className="section proof-section" aria-labelledby="proof-title">
+          <div className="proof-transition-copy" aria-hidden="true">
+            <span>DESIGN / ENGINEER / DELIVER</span>
+          </div>
           <div className="container">
-            <div className="proof-heading">
-              <div>
-                <p className="section-kicker light">Verified performance</p>
-                <h2 id="proof-title">Measured. Dated. Reproducible.</h2>
+            <div className="proof-stage">
+              <div className="proof-heading">
+                <div>
+                  <p className="section-kicker light">Verified performance</p>
+                  <h2 id="proof-title">Measured. Dated. Reproducible.</h2>
+                </div>
+                <p>
+                  Real PageSpeed evidence from shipped work—recorded by project, device strategy,
+                  source, and date so every score has context.
+                </p>
               </div>
-              <p>
-                Only successful audits for published work appear here. Scores remain tied to their
-                project, test strategy, source, and audit date.
-              </p>
-            </div>
-            <div className="proof-audit-grid">
-              {performanceAudits.map((audit) => {
-                const scores = [
-                  { label: "Performance", value: audit.performanceScore },
-                  { label: "Accessibility", value: audit.accessibilityScore },
-                  { label: "Best practices", value: audit.bestPracticesScore },
-                  { label: "SEO", value: audit.seoScore },
-                ].filter(
-                  (score): score is { label: string; value: number } => score.value !== null,
-                );
-                return (
-                  <article key={audit.id}>
-                    <div className="proof-audit-meta">
-                      <span>{audit.strategy.toLowerCase()}</span>
-                      {audit.auditedAt && (
-                        <time dateTime={audit.auditedAt.toISOString()}>
-                          {audit.auditedAt.toLocaleDateString("en-NG", {
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </time>
-                      )}
-                    </div>
-                    <h3>
-                      <Link href={`/projects/${audit.project.slug}`}>
-                        {audit.project.title}
-                        <DiagonalArrow />
-                      </Link>
-                    </h3>
-                    <dl>
-                      {scores.map((score) => (
-                        <div key={score.label}>
-                          <dt>{score.value}</dt>
-                          <dd>{score.label}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p>Source: {audit.source}</p>
-                  </article>
-                );
-              })}
+              <div className="proof-ledger" aria-hidden="true">
+                <span>Evidence log</span>
+                <i />
+                <span>{String(performanceAudits.length).padStart(2, "0")} latest runs</span>
+              </div>
+              <div className="proof-audit-grid">
+                {performanceAudits.map((audit, auditIndex) => {
+                  const scores = [
+                    { label: "Performance", value: audit.performanceScore },
+                    { label: "Accessibility", value: audit.accessibilityScore },
+                    { label: "Best practices", value: audit.bestPracticesScore },
+                    { label: "SEO", value: audit.seoScore },
+                  ].filter(
+                    (score): score is { label: string; value: number } => score.value !== null,
+                  );
+                  return (
+                    <article key={audit.id}>
+                      <div className="proof-audit-meta">
+                        <span>{String(auditIndex + 1).padStart(2, "0")}</span>
+                        <span>{audit.strategy.toLowerCase()} audit</span>
+                        {audit.auditedAt && (
+                          <time dateTime={audit.auditedAt.toISOString()}>
+                            {audit.auditedAt.toLocaleDateString("en-NG", {
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </time>
+                        )}
+                      </div>
+                      <h3>
+                        <Link href={`/projects/${audit.project.slug}`}>
+                          {audit.project.title}
+                          <DiagonalArrow />
+                        </Link>
+                      </h3>
+                      <dl>
+                        {scores.map((score) => (
+                          <div
+                            key={score.label}
+                            style={{ "--audit-score": `${score.value}%` } as CSSProperties}
+                          >
+                            <dt>{score.value}</dt>
+                            <dd>{score.label}</dd>
+                            <span aria-hidden="true" />
+                          </div>
+                        ))}
+                      </dl>
+                      <p>
+                        <span>Source</span>
+                        <strong>{audit.source}</strong>
+                      </p>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>

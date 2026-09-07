@@ -7,6 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { CursorCompanion } from "@/components/shared/cursor-companion";
 import { ResumeDownload } from "@/components/shared/resume-download";
 import { RouteScrollReset } from "@/components/shared/route-scroll-reset";
+import { PageSweep } from "@/components/shared/page-sweep";
 import { siteConfig } from "@/config/site";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,6 +52,7 @@ export default async function WebsiteLayout({ children }: { children: React.Reac
       />
       <CursorCompanion />
       <RouteScrollReset />
+      <PageSweep />
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
