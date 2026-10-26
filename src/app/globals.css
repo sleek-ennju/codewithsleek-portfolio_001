@@ -5200,16 +5200,21 @@ body:has(.resume-page) .resume-download-float {
   position: sticky;
   top: 0;
   height: 100svh;
-  display: flex;
-  flex-direction: column;
-  padding: 1.3rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: 1.2rem;
   border-right: 1px solid #e1e3e7;
   background: #fff;
+  overflow: hidden;
 }
 
 .admin-brand {
-  min-height: 3.5rem;
-  padding-inline: 0.65rem;
+  min-height: 3.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-inline: 0.55rem;
+  border-bottom: 1px solid #eceef1;
 }
 
 .admin-brand > span {
@@ -5226,21 +5231,32 @@ body:has(.resume-page) .resume-download-float {
   object-fit: contain;
 }
 
+.admin-brand strong {
+  font-size: 0.92rem;
+  letter-spacing: -0.04em;
+}
+
 .admin-sidebar nav {
+  min-height: 0;
   display: grid;
-  gap: 0.25rem;
-  margin-top: 2.2rem;
+  align-content: start;
+  gap: 0.2rem;
+  margin-block: 1rem;
+  padding-right: 0.15rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d5d8de transparent;
 }
 
 .admin-sidebar nav a {
-  min-height: 3rem;
+  min-height: 2.8rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  padding: 0.65rem 0.75rem;
-  border-radius: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.7rem;
   color: #4c515d;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   font-weight: 650;
 }
 
@@ -5249,9 +5265,14 @@ body:has(.resume-page) .resume-download-float {
   color: var(--ink);
 }
 
+.admin-sidebar nav a:focus-visible {
+  outline: 2px solid #145ddb;
+  outline-offset: -2px;
+}
+
 .admin-sidebar nav a > span {
-  width: 1.85rem;
-  height: 1.85rem;
+  width: 1.75rem;
+  height: 1.75rem;
   display: grid;
   place-items: center;
   border-radius: 0.45rem;
@@ -5262,38 +5283,93 @@ body:has(.resume-page) .resume-download-float {
 }
 
 .admin-sidebar-footer {
-  margin-top: auto;
-  padding: 1rem;
-  border-radius: 0.8rem;
-  background: #f4f5f7;
+  padding: 0.75rem;
+  border: 1px solid #252525;
+  border-radius: 0.9rem;
+  background: #111;
+  color: white;
+  box-shadow: 0 0.85rem 2rem rgb(15 20 30 / 0.12);
+}
+
+.admin-account-summary {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.admin-account-summary > span {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 0.17);
+  border-radius: 50%;
+  background: #1f5fdb;
+  font:
+    0.65rem/1 var(--font-mono),
+    monospace;
+  letter-spacing: 0.05em;
+}
+
+.admin-account-summary > div {
+  min-width: 0;
 }
 
 .admin-sidebar-footer p {
-  margin: 0 0 0.25rem;
-  color: #777c87;
+  margin: 0 0 0.2rem;
+  color: #8f95a1;
   font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .admin-sidebar-footer strong {
   display: block;
   overflow: hidden;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .admin-sidebar-footer button {
-  margin-top: 0.8rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #4f5663;
+  width: 100%;
+  min-height: 2.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.7rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.17);
+  border-radius: 0.65rem;
+  background: rgb(255 255 255 / 0.06);
+  color: white;
   font: inherit;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.25rem;
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.admin-sidebar-footer button i {
+  font-style: normal;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-sidebar-footer button:hover {
+    border-color: white;
+    background: white;
+    color: var(--ink);
+  }
+}
+
+.admin-sidebar-footer button:focus-visible {
+  outline: 2px solid #70a4ff;
+  outline-offset: 2px;
 }
 
 .admin-workspace {

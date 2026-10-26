@@ -22,6 +22,13 @@ export function AdminShell({
   children: React.ReactNode;
   adminName: string;
 }) {
+  const adminInitials = adminName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
@@ -40,10 +47,18 @@ export function AdminShell({
           ))}
         </nav>
         <div className="admin-sidebar-footer">
-          <p>Signed in as</p>
-          <strong>{adminName}</strong>
+          <div className="admin-account-summary">
+            <span aria-hidden="true">{adminInitials || "AD"}</span>
+            <div>
+              <p>Administrator</p>
+              <strong>{adminName}</strong>
+            </div>
+          </div>
           <form action={endAdminSession}>
-            <button type="submit">Sign out</button>
+            <button type="submit">
+              <span>Sign out</span>
+              <i aria-hidden="true">↗</i>
+            </button>
           </form>
         </div>
       </aside>
