@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { AdminMobileNavigation } from "@/components/admin/admin-mobile-navigation";
 import { endAdminSession } from "@/features/auth/actions";
 
 const adminNavigation = [
@@ -48,17 +49,14 @@ export function AdminShell({
       </aside>
       <div className="admin-workspace">
         <header className="admin-topbar">
-          <details className="admin-mobile-menu">
-            <summary>Menu</summary>
-            <nav aria-label="Mobile administration">
-              {adminNavigation.map((item) => (
-                <Link href={item.href} key={item.href}>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </details>
-          <Link href="/" target="_blank">
+          <Link className="admin-mobile-brand" href="/admin/dashboard">
+            <span>
+              <Image src="/logos/cws_logo_mark.png" alt="" width={460} height={383} sizes="30px" />
+            </span>
+            <strong>CODEwithSleek</strong>
+          </Link>
+          <AdminMobileNavigation adminName={adminName} items={adminNavigation} />
+          <Link className="admin-live-site" href="/" target="_blank">
             View live site <span aria-hidden="true">↗</span>
           </Link>
         </header>
