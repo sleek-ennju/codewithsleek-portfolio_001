@@ -10,11 +10,11 @@ import { getDb } from "@/server/db";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Code with Sleek project case studies and verified engineering outcomes.",
+  description: "CodeWithSleek case studies: websites and systems with measured results.",
   alternates: { canonical: "/projects" },
   openGraph: {
     title: "Projects",
-    description: "Code with Sleek project case studies and verified engineering outcomes.",
+    description: "CodeWithSleek case studies: websites and systems with measured results.",
     url: "/projects",
   },
 };

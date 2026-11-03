@@ -10,7 +10,7 @@ export async function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container nav-shell">
-        <Link className="brand" href="/" aria-label="Code with Sleek home">
+        <Link className="brand" href="/" aria-label="CodeWithSleek home">
           <span className="brand-mark" aria-hidden="true">
             <Image
               src="/logos/cws_logo_mark.png"

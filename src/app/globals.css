@@ -6,7 +6,7 @@
   --line: #e7e8eb;
   --surface: #f5f6f8;
   --paper: #ffffff;
-  --blue: #0d57dd;
+  --blue: #004fd1;
   --blue-soft: #78a4ed;
   --radius-sm: 0.75rem;
   --radius-md: 1.4rem;
@@ -990,6 +990,35 @@ html[data-page-sweep="forward"] {
   text-transform: uppercase;
 }
 
+/* Services reuse the stack grid: two wide columns with a short description per tier. */
+.services-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.services-grid li {
+  min-height: 13rem;
+}
+
+.services-grid li div {
+  gap: 0.6rem;
+}
+
+.services-grid strong {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+}
+
+.services-grid p {
+  max-width: 38ch;
+  margin: 0;
+  color: #aeb2ba;
+  line-height: 1.6;
+  transition: color 180ms ease;
+}
+
+.services-grid li:hover p {
+  color: var(--muted);
+}
+
 .technology-empty {
   margin-top: 3rem;
   color: #aeb2ba;
@@ -1900,6 +1929,27 @@ html[data-page-sweep="forward"] {
 }
 .about-copy p + p {
   margin-top: 0.75rem;
+}
+
+/* Founder page: the profile opens the page, so its heading is the h1 and clears the header. */
+.founder-intro {
+  padding-top: clamp(7rem, 13vw, 11rem);
+}
+
+.founder-intro .about-copy h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 5.25rem);
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.founder-intro .about-copy h1 + p {
+  margin-top: clamp(1.35rem, 2.5vw, 2rem);
+}
+
+.founder-actions {
+  margin-top: 3rem;
 }
 
 .contact-section {

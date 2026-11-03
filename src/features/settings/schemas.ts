@@ -32,22 +32,22 @@ export type SiteSettingsState = {
 
 export const defaultSiteSettings: SiteSettings = {
   brandName: "CODEwithSleek",
-  tagline: "Crafting logic the sleek way",
-  heroTitle: "Crafting logic,",
-  heroAccent: "the sleek way.",
+  tagline: "Websites & digital systems",
+  heroTitle: "Turn attention",
+  heroAccent: "into customers.",
   heroDescription:
-    "I design and engineer clear, scalable web products for ambitious teams—from the first product decision to the polished release.",
-  contactHeading: "Have a product worth building properly?",
+    "We design and build websites, booking and payment flows, automations and custom software for growing businesses. Every project is measured, not guessed.",
+  contactHeading: "Want to know what your website is costing you?",
   contactDescription:
-    "Share the challenge, the outcome you want, and where things currently stand. I’ll reply with a clear next step.",
-  contactEmail: "codewithsleek@gmail.com",
+    "Tell us about your business and where things stand. We’ll send a free audit of your site with the three changes that matter most. No obligation.",
+  contactEmail: "hello@codewithsleek.com",
   responseTime: "Usually within two business days.",
   bookingUrl: "",
   resumeUrl: "",
   githubUrl: "",
   linkedinUrl: "",
   xUrl: "",
-  seoTitle: "Code with Sleek - Frontend-first full-stack engineering",
+  seoTitle: "Websites & digital systems for growing businesses",
   seoDescription:
-    "Premium web experiences, scalable product engineering, and evidence-backed case studies by Emmanuel Ihenacho.",
+    "Websites, booking systems, automations and custom software that turn attention into customers. Measured results for growing UK businesses.",
 };

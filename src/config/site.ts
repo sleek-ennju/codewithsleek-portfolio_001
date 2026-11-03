@@ -14,16 +14,17 @@ if (!parsedSiteUrl.success) {
 }
 
 export const siteConfig = {
-  name: "Code with Sleek",
-  title: "Code with Sleek - Frontend-first full-stack engineering",
+  name: "CodeWithSleek",
+  title: "CodeWithSleek - Websites and digital systems for growing businesses",
   description:
-    "Premium web experiences, scalable product engineering, and evidence-backed case studies by Emmanuel Ihenacho.",
+    "We build websites, booking and payment flows, automations and custom software that turn attention into customers. Measured, not guessed.",
   url: parsedSiteUrl.data,
   resumePath: "/documents/Emmanuel-Ihenacho-Resume.pdf",
   navigation: [
-    { label: "Works", href: "/#works" },
+    { label: "Work", href: "/#works" },
     { label: "Process", href: "/#process" },
-    { label: "About", href: "/#about" },
+    { label: "Services", href: "/#services" },
+    { label: "Founder", href: "/founder" },
     { label: "Contact", href: "/#contact" },
   ],
 } as const;

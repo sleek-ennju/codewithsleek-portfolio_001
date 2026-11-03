@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Code with Sleek - Crafting logic, the sleek way";
+export const alt = "CodeWithSleek - Websites and systems that turn attention into customers";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,11 +47,11 @@ export default function OpenGraphImage() {
           lineHeight: 1.02,
         }}
       >
-        <span>Crafting logic,</span>
-        <span style={{ color: "#2361d1" }}>the sleek way.</span>
+        <span>Websites and systems</span>
+        <span style={{ color: "#004fd1" }}>that turn attention into customers.</span>
       </div>
       <div style={{ display: "flex", fontSize: 24, color: "#555b66" }}>
-        Frontend engineering · Next.js · React · TypeScript · Tailwind CSS · Product delivery
+        Websites · Booking and payments · Automation · Custom software
       </div>
     </div>,
     size,

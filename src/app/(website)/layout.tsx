@@ -5,7 +5,6 @@ import { getSiteSettings } from "@/features/settings/queries";
 import { JsonLd } from "@/components/shared/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { CursorCompanion } from "@/components/shared/cursor-companion";
-import { ResumeDownload } from "@/components/shared/resume-download";
 import { RouteScrollReset } from "@/components/shared/route-scroll-reset";
 import { PageSweep } from "@/components/shared/page-sweep";
 import { siteConfig } from "@/config/site";
@@ -21,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: "/",
       siteName: settings.brandName,
       type: "website",
-      locale: "en_NG",
+      locale: "en_GB",
     },
     twitter: {
       card: "summary_large_image",
@@ -33,20 +32,25 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function WebsiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
-  // The bundled PDF guarantees a working download; administrators can replace it without a deploy.
-  const resumeUrl = settings.resumeUrl || siteConfig.resumePath;
   const sameAs = [settings.githubUrl, settings.linkedinUrl, settings.xUrl].filter(Boolean);
   return (
     <>
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "Person",
-          name: "Emmanuel Ihenacho",
+          "@type": "ProfessionalService",
+          name: siteConfig.name,
           alternateName: settings.brandName,
+          description: settings.seoDescription,
           url: absoluteUrl("/"),
           email: `mailto:${settings.contactEmail}`,
-          jobTitle: "Frontend Engineer",
+          areaServed: "GB",
+          founder: {
+            "@type": "Person",
+            name: "Emmanuel Ihenacho",
+            jobTitle: "Founder and lead engineer",
+            url: absoluteUrl("/founder"),
+          },
           sameAs,
         }}
       />
@@ -60,7 +64,6 @@ export default async function WebsiteLayout({ children }: { children: React.Reac
       <div id="main-content" tabIndex={-1}>
         {children}
       </div>
-      <ResumeDownload href={resumeUrl} floating />
       <SiteFooter />
     </>
   );

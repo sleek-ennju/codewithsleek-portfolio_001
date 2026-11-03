@@ -3,18 +3,12 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 
 import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
-import { processSteps } from "./content";
+import { processSteps, services } from "./content";
 import { ContactSection } from "@/features/contact/contact-section";
 import type { SiteSettings } from "@/features/settings/schemas";
 import { TestimonialDeck, type HomeTestimonial } from "./testimonial-deck";
 import { MotionStory } from "./motion-story";
 import { ProjectVisualGallery } from "./project-visual-gallery";
-import {
-  EXPERIENCED_STACK,
-  FOCUSED_STACK,
-  TECHNOLOGY_LIBRARY,
-  technologySlug,
-} from "@/features/technologies/library";
 
 type ProjectVisual = { secureUrl: string; altText: string | null };
 type FeaturedProject = {
@@ -53,18 +47,6 @@ export function HomePage({
   testimonials: HomeTestimonial[];
   settings: SiteSettings;
 }) {
-  const technologyByName = new Map(
-    TECHNOLOGY_LIBRARY.map((technology) => [
-      technology.name,
-      { ...technology, id: technologySlug(technology.name) },
-    ]),
-  );
-  const focusedTechnologies = FOCUSED_STACK.map((name) => technologyByName.get(name)).filter(
-    (technology) => technology !== undefined,
-  );
-  const experiencedTechnologies = EXPERIENCED_STACK.map((name) =>
-    technologyByName.get(name),
-  ).filter((technology) => technology !== undefined);
   return (
     <main>
       <MotionStory />
@@ -74,8 +56,8 @@ export function HomePage({
         <div className="hero-glow hero-glow-right" aria-hidden="true" />
         <div className="container hero-content">
           <p className="eyebrow hero-stack">
-            <span aria-hidden="true">&lt;/&gt;</span> Frontend Engineer · Next.js · React ·
-            TypeScript · Tailwind CSS · State · Motion · Integrations
+            <span aria-hidden="true">&lt;/&gt;</span> Websites · Booking and payments · Automation ·
+            Custom software
           </p>
           <h1>
             <span className="hero-title-main">{settings.heroTitle}</span>
@@ -85,11 +67,11 @@ export function HomePage({
           <div className="hero-actions">
             <Link className="button button-dark liquid-button" href="#contact">
               <span>
-                Start a project <DiagonalArrow />
+                Get a free audit <DiagonalArrow />
               </span>
             </Link>
             <Link className="button button-light liquid-button" href="#works">
-              <span>Explore my work</span>
+              <span>See our work</span>
             </Link>
           </div>
         </div>
@@ -100,7 +82,7 @@ export function HomePage({
           <div className="section-heading-row">
             <div>
               <p className="section-kicker">Selected work</p>
-              <h2>Products with a point of view.</h2>
+              <h2>Work that earns its keep.</h2>
             </div>
             <Link className="text-link" href="/projects">
               View all case studies <DiagonalArrow />
@@ -214,14 +196,14 @@ export function HomePage({
         <div className="container process-story-stage">
           <div className="process-heading">
             <div>
-              <p className="section-kicker">How I work</p>
+              <p className="section-kicker">How we work</p>
               <h2>
-                From intent to a <span>dependable release.</span>
+                From first audit to a <span>measured launch.</span>
               </h2>
             </div>
             <p>
-              Each stage closes a different kind of risk: the wrong problem, an unclear experience,
-              fragile implementation, or an unverified launch.
+              Each stage removes a different risk: fixing the wrong thing, an unclear scope,
+              surprises during the build, or a launch nobody measured.
             </p>
           </div>
           <div className="process-story-layout">
@@ -234,29 +216,29 @@ export function HomePage({
                 <span />
               </div>
               <div className="blueprint-layer blueprint-layer-1">
-                <span>01 / PRODUCT FRAME</span>
+                <span>01 / AUDIT</span>
                 <i />
                 <i />
                 <i />
                 <i />
               </div>
               <div className="blueprint-layer blueprint-layer-2">
-                <span>02 / EXPERIENCE MAP</span>
+                <span>02 / PLAN</span>
                 <i />
                 <i />
                 <i />
                 <i />
               </div>
               <div className="blueprint-layer blueprint-layer-3">
-                <span>03 / ENGINEERED SYSTEM</span>
+                <span>03 / BUILD</span>
                 <i />
                 <i />
                 <i />
                 <i />
               </div>
               <div className="blueprint-layer blueprint-layer-4">
-                <span>04 / RELEASE READY</span>
-                <strong>VERIFIED</strong>
+                <span>04 / LAUNCH</span>
+                <strong>MEASURED</strong>
                 <i />
                 <i />
                 <i />
@@ -286,53 +268,39 @@ export function HomePage({
         </div>
       </section>
 
-      <section className="section technology-section" id="technologies">
+      <section className="section technology-section services-section" id="services">
         <div className="container">
           <div className="technology-heading">
             <div>
-              <p className="section-kicker">Capabilities</p>
-              <h2>A focused stack for complete product delivery.</h2>
+              <p className="section-kicker">Services</p>
+              <h2>Start with a website. Grow into a system.</h2>
             </div>
             <p>
-              Next.js, React, and TypeScript anchor the work. Tailwind, deliberate state management,
-              purposeful motion, and dependable integrations turn that foundation into complete
-              products.
+              Most clients start with a site that finally does its job. As the business grows, we add
+              the pieces that save time and win more customers, on the same foundation.
             </p>
           </div>
           <div className="capability-rail" aria-hidden="true">
-            <span>DESIGN</span>
+            <span>FOUND</span>
             <i />
-            <span>FRONTEND</span>
+            <span>BOOKED</span>
             <i />
-            <span>DATA</span>
+            <span>AUTOMATED</span>
             <i />
-            <span>INTEGRATIONS</span>
+            <span>SCALED</span>
           </div>
-          {focusedTechnologies.length ? (
-            <ul className="technology-grid">
-              {focusedTechnologies.map((technology, index) => (
-                <li key={technology.id}>
-                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <strong>{technology.name}</strong>
-                    <small>{technology.category}</small>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="technology-empty">The focused technology library is being prepared.</p>
-          )}
-          {experiencedTechnologies.length > 0 && (
-            <div className="technology-experience">
-              <p>Also experienced with</p>
-              <ul>
-                {experiencedTechnologies.map((technology) => (
-                  <li key={technology.id}>{technology.name}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <ul className="technology-grid services-grid">
+            {services.map((service) => (
+              <li key={service.number}>
+                <span aria-hidden="true">{service.number}</span>
+                <div>
+                  <small>{service.outcome}</small>
+                  <strong>{service.title}</strong>
+                  <p>{service.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -349,8 +317,8 @@ export function HomePage({
                   <h2 id="proof-title">Measured. Dated. Reproducible.</h2>
                 </div>
                 <p>
-                  Real PageSpeed evidence from shipped work—recorded by project, device strategy,
-                  source, and date so every score has context.
+                  Every site we ship is measured with Google PageSpeed. Scores are recorded by
+                  project, device and date, so you can check the claims for yourself.
                 </p>
               </div>
               <div className="proof-ledger" aria-hidden="true">
@@ -375,7 +343,7 @@ export function HomePage({
                         <span>{audit.strategy.toLowerCase()} audit</span>
                         {audit.auditedAt && (
                           <time dateTime={audit.auditedAt.toISOString()}>
-                            {audit.auditedAt.toLocaleDateString("en-NG", {
+                            {audit.auditedAt.toLocaleDateString("en-GB", {
                               month: "short",
                               year: "numeric",
                             })}
@@ -437,7 +405,7 @@ export function HomePage({
             <Image
               className="profile-card-portrait"
               src="/images/about/emmanuel-ihenacho-editorial-blue-facing-right.png"
-              alt="Emmanuel Ihenacho, frontend engineer and founder of Code with Sleek"
+              alt="Emmanuel Ihenacho, founder and lead engineer of CodeWithSleek"
               fill
               sizes="(max-width: 800px) 100vw, 40vw"
             />
@@ -445,11 +413,11 @@ export function HomePage({
               <small>
                 CODE / WITH / SLEEK
                 <br />
-                PROFILE 01
+                FOUNDER
               </small>
             </div>
             <div className="profile-card-copy">
-              <p>Frontend engineer · Product thinker</p>
+              <p>Founder · Lead engineer</p>
               <strong>
                 Emmanuel
                 <br />
@@ -461,24 +429,23 @@ export function HomePage({
             </div>
           </div>
           <div className="about-copy">
-            <p className="section-kicker">About me</p>
-            <h2>Frontend-first. Product-minded. Full-stack when it matters.</h2>
+            <p className="section-kicker">Who you’ll work with</p>
+            <h2>Built by an engineer. Run like a studio.</h2>
             <p>
-              I’m Emmanuel Ihenacho, the frontend engineer behind Code with Sleek. I turn product
-              ideas and visual systems into responsive web applications that feel clear, deliberate,
-              and ready for real use.
+              CodeWithSleek is led by Emmanuel Ihenacho, a full-stack engineer based in the UK. You
+              work directly with the person building your project, not an account manager passing
+              messages along.
             </p>
             <p>
-              My work combines Next.js, React, and TypeScript engineering with considered state,
-              motion, backend integrations, and design fluency in Figma—with accessibility,
-              maintainability, and product outcomes treated as part of the same job.
+              That means proper engineering under the hood, with fast pages, accessible design and
+              reliable integrations, and plain English in every conversation about it.
             </p>
             <div className="about-actions">
               <Link className="button button-dark liquid-button" href="#contact">
-                <span>Start a project</span>
+                <span>Get a free audit</span>
               </Link>
-              <Link className="button button-light liquid-button" href="/projects">
-                <span>Browse case studies</span>
+              <Link className="button button-light liquid-button" href="/founder">
+                <span>Meet the founder</span>
               </Link>
             </div>
           </div>

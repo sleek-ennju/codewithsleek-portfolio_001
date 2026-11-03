@@ -33,9 +33,9 @@ export async function SiteFooter() {
       <SiteFooterMotion />
       <div className="container">
         <div className="footer-invitation">
-          <p>Have a product in mind?</p>
-          <Link href="#contact">
-            Let&apos;s make it clear, useful, <span>and beautifully built.</span>
+          <p>Ready for a website that works harder?</p>
+          <Link href="/#contact">
+            Get a free audit <span>of your site.</span>
             <i>
               <DiagonalArrow />
             </i>
@@ -80,7 +80,7 @@ export async function SiteFooter() {
             )}
           </div>
           <p className="footer-copyright">
-            © {new Date().getFullYear()} Code with Sleek
+            © {new Date().getFullYear()} CodeWithSleek
             <br />
             All rights reserved.
           </p>

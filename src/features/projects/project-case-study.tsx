@@ -165,7 +165,7 @@ export function ProjectCaseStudy({
                     <span>{audit.strategy.toLowerCase()} audit</span>
                     {audit.auditedAt && (
                       <time dateTime={audit.auditedAt.toISOString()}>
-                        {audit.auditedAt.toLocaleDateString("en-NG", {
+                        {audit.auditedAt.toLocaleDateString("en-GB", {
                           month: "short",
                           year: "numeric",
                         })}

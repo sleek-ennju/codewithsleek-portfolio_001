@@ -21,9 +21,9 @@ test("production safeguards are exposed", async ({ request }) => {
 test("landing page exposes its primary conversion journey", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Crafting logic");
-  await expect(page.getByRole("link", { name: /start a project/i }).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: /explore my work/i }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Turn attention");
+  await expect(page.getByRole("link", { name: /get a free audit/i }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /see our work/i }).first()).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /^https?:\/\//);
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(1);
 });
