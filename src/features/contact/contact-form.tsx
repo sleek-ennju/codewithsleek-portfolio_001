@@ -22,8 +22,8 @@ export function ContactForm() {
     >
       <div className="contact-form-heading">
         <div>
-          <span>Project brief</span>
-          <strong>A few details to get us aligned.</strong>
+          <span>Free audit request</span>
+          <strong>A few details and we’ll take it from there.</strong>
         </div>
         <small>01 — 03</small>
       </div>
@@ -61,7 +61,7 @@ export function ContactForm() {
       </div>
 
       <label htmlFor="contact-message">
-        Tell me about the project
+        Tell us about your business
         <textarea
           aria-describedby={
             state.errors?.message ? "contact-message-error" : "contact-message-help"
@@ -78,7 +78,7 @@ export function ContactForm() {
           <span id="contact-message-error">{state.errors.message[0]}</span>
         ) : (
           <small id="contact-message-help">
-            Goals, timeline, constraints—anything that helps frame the work.
+            Your website or social link, what you sell, and what you’d like it to do better.
           </small>
         )}
       </label>
@@ -93,7 +93,7 @@ export function ContactForm() {
       ) : null}
 
       <button className="button button-dark" disabled={pending} type="submit">
-        {pending ? "Sending…" : "Send project enquiry"}
+        {pending ? "Sending…" : "Request my free audit"}
         <DiagonalArrow />
       </button>
     </form>

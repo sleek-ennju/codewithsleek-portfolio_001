@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function SiteFooterMotion() {
+  // The footer lives in the shared layout, so rebuild its trigger on every route: positions
+  // measured on a long page (home) would otherwise leave it clipped on a shorter one.
+  const pathname = usePathname();
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const footer = document.querySelector<HTMLElement>(".site-footer");
@@ -67,7 +72,7 @@ export function SiteFooterMotion() {
       document.documentElement.classList.remove("footer-motion-ready");
       media.revert();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

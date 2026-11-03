@@ -103,7 +103,7 @@ export function FounderPage({ resumeUrl, githubUrl }: { resumeUrl: string; githu
             <i />
             <span>INTEGRATIONS</span>
           </div>
-          <ul className="technology-grid">
+          <ul className="technology-grid founder-stack">
             {focusedTechnologies.map((technology, index) => (
               <li key={technology.id}>
                 <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>

@@ -7510,3 +7510,35 @@ body:has(.resume-page) .resume-download-float {
     transform: none;
   }
 }
+
+/* Phones and small tablets skip the pinned desktop story, so the curved hand-off into the
+   process section is static there. Keep it a short accent instead of a tall empty band. */
+@media (max-width: 900px) {
+  .works-section {
+    padding-bottom: 2.5rem;
+  }
+
+  .process-transition {
+    height: 4.5rem;
+  }
+
+  .process-section::before {
+    top: calc(4.5rem - 22rem);
+  }
+}
+
+/* The founder stack lists 17 tools; two compact columns keep it scannable on phones. */
+@media (max-width: 900px) {
+  .founder-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .founder-stack li {
+    min-height: 6.5rem;
+    padding: 1rem;
+  }
+
+  .founder-stack strong {
+    font-size: 1rem;
+  }
+}

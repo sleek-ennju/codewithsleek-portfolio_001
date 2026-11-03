@@ -12,7 +12,14 @@ export function MotionStory() {
     const contexts: gsap.Context[] = [];
     root.classList.add("story-motion-ready");
 
+    // Each breakpoint reverts its own contexts when it stops matching, so content hidden by the
+    // desktop story (autoAlpha 0) is restored when the layout drops to mobile, e.g. on rotation.
+    const revertContextsFrom = (start: number) => () => {
+      contexts.splice(start).forEach((context) => context.revert());
+    };
+
     media.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
+      const desktopStart = contexts.length;
       const hero = document.querySelector<HTMLElement>(".hero");
       if (hero)
         contexts.push(
@@ -500,11 +507,24 @@ export function MotionStory() {
               );
           }, contact),
         );
+      return revertContextsFrom(desktopStart);
     });
 
     media.add("(max-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
+      const mobileStart = contexts.length;
       const elements = gsap.utils.toArray<HTMLElement>(
         ".works-section .project-card, .process-grid li, .technology-grid li, .profile-card, .about-copy, .contact-form, .proof-heading, .testimonial-heading, .testimonial-deck",
+      );
+      // A reverted desktop scrub can leave its hidden start state behind when the breakpoint flips
+      // mid-scroll, so clear inline styles before the lighter mobile reveal takes over.
+      gsap.set(
+        [
+          ...elements,
+          ...gsap.utils.toArray<HTMLElement>(
+            ".project-card-body, .project-card-body *, .project-art, .technology-heading > *, .capability-rail > *",
+          ),
+        ],
+        { clearProps: "opacity,visibility,transform,clipPath" },
       );
       elements.forEach((element) =>
         contexts.push(
@@ -523,6 +543,7 @@ export function MotionStory() {
           }, element),
         ),
       );
+      return revertContextsFrom(mobileStart);
     });
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
