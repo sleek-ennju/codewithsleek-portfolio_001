@@ -21,11 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: settings.brandName,
       type: "website",
       locale: "en_GB",
+      images: [siteConfig.socialImage],
     },
     twitter: {
       card: "summary_large_image",
       title: settings.seoTitle,
       description: settings.seoDescription,
+      images: [siteConfig.socialImage.url],
     },
   };
 }

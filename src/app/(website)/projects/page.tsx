@@ -4,6 +4,7 @@ import { connection } from "next/server";
 import { DiagonalArrow } from "@/components/shared/diagonal-arrow";
 import { ProjectsArchiveMotion } from "@/features/projects/projects-archive-motion";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 import { isDatabaseUnavailable, withDatabaseRetry } from "@/server/database-resilience";
 import { getDb } from "@/server/db";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     title: "Projects",
     description: "CodeWithSleek case studies: websites and systems with measured results.",
     url: "/projects",
+    images: [siteConfig.socialImage],
   },
 };
 

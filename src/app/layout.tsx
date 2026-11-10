@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   applicationName: siteConfig.name,
   alternates: { canonical: "/" },
+  openGraph: { images: [siteConfig.socialImage] },
+  twitter: { card: "summary_large_image", images: [siteConfig.socialImage.url] },
   robots: { index: true, follow: true },
 };
 

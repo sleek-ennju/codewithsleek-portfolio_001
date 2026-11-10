@@ -5,6 +5,7 @@ import { ProjectCaseStudy } from "@/features/projects/project-case-study";
 import { getPublishedProject } from "@/features/projects/queries";
 import { JsonLd } from "@/components/shared/json-ld";
 import { absoluteUrl } from "@/lib/seo";
+import { siteConfig } from "@/config/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,13 +36,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
               alt: image.altText ?? project.title,
             },
           ]
-        : [],
+        : [siteConfig.socialImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: image ? [image.secureUrl] : [],
+      images: image ? [image.secureUrl] : [siteConfig.socialImage.url],
     },
   };
 }

@@ -20,6 +20,7 @@ export const siteConfig = {
     "We build websites, booking and payment flows, automations and custom software that turn attention into customers. Measured, not guessed.",
   url: parsedSiteUrl.data,
   resumePath: "/documents/Emmanuel-Ihenacho-Resume.pdf",
+  socialImage: { url: "/og-image.png", width: 1200, height: 630, alt: "CodeWithSleek logo" },
   navigation: [
     { label: "Work", href: "/#works" },
     { label: "Process", href: "/#process" },
